@@ -4,6 +4,11 @@ CREATE TABLE roles (
     role_name VARCHAR(50) UNIQUE NOT NULL
 );
 
+-- Insert default roles
+INSERT INTO roles (role_name) VALUES ('USER');
+INSERT INTO roles (role_name) VALUES ('ADMIN');
+INSERT INTO roles (role_name) VALUES ('MODERATOR');
+
 -- Create the Users table
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,

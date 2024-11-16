@@ -9,7 +9,7 @@ servers:
     description: User Service API Base Path
 
 paths:
-  /:
+  /users/getUsers:
     get:
       summary: Get All Users
       description: Retrieve a list of all users.
@@ -24,9 +24,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserDTO'
 
-  /{id}:
+  /users/getUser/{id}:
     get:
       summary: Get User by ID
       description: Retrieve a single user by their unique ID.
@@ -45,10 +45,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserDTO'
         '404':
           description: User not found
 
+  /users/updateUser/{id}:
     put:
       summary: Update User by ID
       description: Update an existing user's information.
@@ -73,10 +74,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserDTO'
         '404':
           description: User not found
-
+  /users/deleteUser/{id}:
     delete:
       summary: Delete User by ID
       description: Delete a user by their unique ID.
@@ -95,7 +96,7 @@ paths:
         '404':
           description: User not found
 
-  /create:
+  /users/createUser:
     post:
       summary: Create a New User
       description: Create a new user with the provided information.
@@ -114,13 +115,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserDTO'
         '400':
           description: Invalid input
 
 components:
   schemas:
-    User:
+    UserDTO:
       type: object
       properties:
         userId:
@@ -133,10 +134,6 @@ components:
         passwordHash:
           type: string
           description: Hashed password for secure storage
-        status:
-          type: string
-          enum: [active, suspended, deleted]
-          description: Current status of the user
         createdAt:
           type: string
           format: date-time
@@ -145,6 +142,13 @@ components:
           type: string
           format: date-time
           description: Last update timestamp
+        status:
+          type: string
+          enum: [ active, suspended, deleted ]
+          description: Current status of the user
+        role:
+          type: integer
+          description: User Role Id
 
     UserCreate:
       type: object
@@ -166,5 +170,11 @@ components:
           description: User's email address
         status:
           type: string
-          enum: [active, suspended, deleted]
+          enum: [ active, suspended, deleted ]
           description: User's current status
+        passwordHash:
+          type: string
+          description: Hashed password for secure storage
+        role:
+          type: integer
+          description: User Role Id
