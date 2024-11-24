@@ -47,7 +47,7 @@ public class UserService {
         Role role = roleRepository.findByRoleName(RoleName.USER)
                 .orElseThrow(() -> new IllegalArgumentException("Default role not found"));
         User userEntity = User.builder().email(userInfo.getEmail())
-                .passwordHash(passwordEncoder.encode(userInfo.getPassword()))
+                .password(passwordEncoder.encode(userInfo.getPassword()))
                 .role(role)
                 .build();
         User savedUser = userRepository.save(userEntity);
@@ -65,8 +65,8 @@ public class UserService {
         if (userUpdateData.getStatus() != null) {
             existingUser.setStatus(userUpdateData.getStatus().name());
         }
-        if (userUpdateData.getPasswordHash() != null) {
-            existingUser.setPasswordHash(userUpdateData.getPasswordHash());
+        if (userUpdateData.getPassword() != null) {
+            existingUser.setPassword(userUpdateData.getPassword());
         }
         if (userUpdateData.getRole() != null) {
             Role role = roleRepository.findById(userUpdateData.getRole())
