@@ -37,13 +37,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
-  /auth/logout:
-    post:
-      summary: Logout a user
-      responses:
-        '204':
-          description: User logged out successfully
-
 components:
   schemas:
     RegisterRequest:

@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public UserDTO createUser(UserCreate userInfo) {
-        Role role = roleRepository.findByRoleName(RoleName.USER)
+        Role role = roleRepository.findByRoleName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new IllegalArgumentException("Default role not found"));
         User userEntity = User.builder().email(userInfo.getEmail())
                 .password(passwordEncoder.encode(userInfo.getPassword()))

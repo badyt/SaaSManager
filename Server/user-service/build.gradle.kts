@@ -62,11 +62,11 @@ tasks.withType<Test> {
 }
 
 val generatedSourcesPath = layout.buildDirectory.dir("generated").get().asFile.path
-val usersApiDescriptionFile = "$rootDir/user-service/src/main/resources/specification/api-spec-users.yaml"
-val authApiDescriptionFile = "$rootDir/user-service/src/main/resources/specification/api-spec-auth.yaml"
+val apiDescriptionFilesPath = "$rootDir/user-service/src/main/resources/specification"
+
 openApiGenerate {
     generatorName.set("spring")
-    inputSpec.set(usersApiDescriptionFile)
+    inputSpec.set("$apiDescriptionFilesPath/api-spec-users.yaml")
     outputDir.set(generatedSourcesPath)
     apiPackage.set("com.example.users.api")    // Set your API package
     modelPackage.set("com.example.users.model") // Set your Model package
@@ -76,13 +76,12 @@ openApiGenerate {
             "interfaceOnly" to "true"
         )
     )
-//    typeMappings.set(mapOf("integer" to "Long"))
 }
 
 
 val generateAuthApi by tasks.registering(GenerateTask::class) {
     generatorName.set("spring")
-    inputSpec.set(authApiDescriptionFile)
+    inputSpec.set("$apiDescriptionFilesPath/api-spec-auth.yaml")
     outputDir.set(generatedSourcesPath)
     apiPackage.set("com.example.auth.api")
     modelPackage.set("com.example.auth.model")
@@ -95,11 +94,26 @@ val generateAuthApi by tasks.registering(GenerateTask::class) {
 //    typeMappings.set(mapOf("integer" to "Long"))
 }
 
+val generateTeamApi by tasks.registering(GenerateTask::class) {
+    generatorName.set("spring")
+    inputSpec.set("$apiDescriptionFilesPath/api-spec-teams.yaml")
+    outputDir.set(generatedSourcesPath)
+    apiPackage.set("com.example.teams.api")
+    modelPackage.set("com.example.teams.model")
+    configOptions.set(
+        mapOf(
+            "interfaceOnly" to "true",
+            "useSpringBoot3" to "true"
+        )
+    )
+}
+
 sourceSets["main"].java.srcDir("$generatedSourcesPath/src/main/java")
 
 tasks.withType<JavaCompile> {
     dependsOn("openApiGenerate")
     dependsOn("generateAuthApi")
+    dependsOn("generateTeamApi")
 }
 
 flyway {

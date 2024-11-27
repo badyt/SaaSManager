@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: Team Service API
+  version: 1.0.0
+  description: API for managing teams and their members.
+
+paths:
+  /teams/createTeam:
+    post:
+      summary: Create a new team
+      description: Create a new team with the given team name and creator.
+      operationId: createTeam
+      tags:
+        - Teams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTeamRequest'
+      responses:
+        '201':
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTeamResponse'
+        '400':
+          description: Invalid input
+
+  /teams/{team_id}/add_user:
+    post:
+      summary: Add a user to a team
+      description: Add a user to a specific team by providing their user ID.
+      operationId: addUserToTeam
+      tags:
+        - Teams
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUserRequest'
+      responses:
+        '200':
+          description: User added to the team successfully
+        '404':
+          description: Team or User not found
+
+components:
+  schemas:
+    CreateTeamRequest:
+      type: object
+      properties:
+        team_name:
+          type: string
+          description: Name of the team
+        created_by:
+          type: integer
+          description: User ID of the creator
+      required:
+        - team_name
+        - created_by
+
+    CreateTeamResponse:
+      type: object
+      properties:
+        team_id:
+          type: integer
+          description: Unique identifier of the created team
+        team_name:
+          type: string
+          description: Name of the created team
+
+    AddUserRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: User ID of the user to be added
+      required:
+        - user_id

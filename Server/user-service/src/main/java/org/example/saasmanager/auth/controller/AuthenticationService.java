@@ -26,6 +26,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,8 @@ public class AuthenticationService {
         UserDTO userDTO = new UserDTO()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRoleId());
+                .role(request.getRoleId())
+                .createdAt(OffsetDateTime.now());
         User user = userMapper.toEntity(userDTO, roleRepository);
         repository.save(user);
         return new RegisterResponse().message("Successfully Registered New User!");

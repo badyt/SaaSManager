@@ -1,7 +1,7 @@
 package org.example.shared.enums;
 
 public enum RoleName {
-    USER,
-    ADMIN,
-    MODERATOR
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_MODERATOR
 }
