@@ -4,16 +4,11 @@ import useAuthStore from "../../stores/authStore";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
-    const { token, logout } = useAuthStore();
+    const { token } = useAuthStore();
     const navigate = useNavigate();
 
     if (!token)
         return <Navigate to="/login" />;
-
-    const handleLogout = () => {
-        logout();
-        navigate("/login");
-    };
 
     const features = [
         {
@@ -29,33 +24,12 @@ const Home = () => {
         {
             title: "View Dashboard",
             description: "Placeholder for future analytics and dashboard functionality.",
-            onClick: () => alert("Coming soon!"),
+            onClick: () => navigate("/users"),
         },
     ];
 
     return (
         <Container>
-            {/* Navigation Bar */}
-            <AppBar position="static" color="primary">
-                <Toolbar>
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        SaaS Platform
-                    </Typography>
-                    <Button color="inherit" onClick={() => navigate("/")}>
-                        Home
-                    </Button>
-                    <Button color="inherit" onClick={() => navigate("/teams")}>
-                        Teams
-                    </Button>
-                    <Button color="inherit" onClick={() => navigate("/profile")}>
-                        Profile
-                    </Button>
-                    <Button color="inherit" onClick={handleLogout}>
-                        Logout
-                    </Button>
-                </Toolbar>
-            </AppBar>
-
             {/* Welcome Section */}
             <Box sx={{ my: 5, textAlign: "center" }}>
                 <Avatar
