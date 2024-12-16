@@ -26,6 +26,7 @@ const TeamManagement: React.FC = () => {
 
     const [open, setOpen] = useState(false);
     const [newTeamName, setNewTeamName] = useState("");
+    const [newTeamDescription, setNewTeamDescription] = useState("");
     const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
     const [userIdToAdd, setUserIdToAdd] = useState("");
 
@@ -71,6 +72,12 @@ const TeamManagement: React.FC = () => {
                         fullWidth
                         value={newTeamName}
                         onChange={(e) => setNewTeamName(e.target.value)}
+                    />
+                    <TextField
+                        label="Team Description"
+                        fullWidth
+                        value={newTeamDescription}
+                        onChange={(e) => setNewTeamDescription(e.target.value)}
                     />
                 </DialogContent>
                 <DialogActions>

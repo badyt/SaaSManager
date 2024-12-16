@@ -45,6 +45,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", referencedColumnName = "roleId", nullable = true)
     private Role role;
 
+    @Column(nullable = false)
+    private String name;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getRoleName().name()));

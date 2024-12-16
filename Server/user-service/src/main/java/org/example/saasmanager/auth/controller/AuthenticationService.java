@@ -43,6 +43,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRoleId())
+                .name(request.getName())
                 .createdAt(OffsetDateTime.now());
         User user = userMapper.toEntity(userDTO, roleRepository);
         repository.save(user);
@@ -58,11 +59,14 @@ public class AuthenticationService {
         );
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user,user.getUserId());
         var refreshToken = jwtService.generateRefreshToken(user);
         return new LoginResponse()
                 .accessToken(jwtToken)
-                .refreshToken(refreshToken);
+                .refreshToken(refreshToken)
+                .name(user.getName())
+                .role(user.getRole().getRoleName().name())
+                .email(user.getEmail());
     }
 
 
@@ -82,7 +86,7 @@ public class AuthenticationService {
             var user = this.repository.findByEmail(userEmail)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
+                var accessToken = jwtService.generateToken(user,user.getUserId());
                 var authResponse = new LoginResponse()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken);

@@ -1,20 +1,22 @@
 import React from "react";
-import { useUserProfile, useUserTeams } from "../../hooks/useUsers";
+import { useUserTeams } from "../../hooks/useUsers";
 import { Box, Typography, List, ListItem, Divider, Button } from "@mui/material";
+import useAuthStore from "../../stores/authStore";
+import { Roles } from "../../constants/roles";
 
 const UserDashboard: React.FC = () => {
-    const { data: userProfile } = useUserProfile();
+    const { username, role } = useAuthStore()
     const { data: userTeams } = useUserTeams();
 
-    if (!userProfile) return <Typography>Loading...</Typography>;
+    if (!username) return <Typography>Loading...</Typography>;
 
     return (
         <Box sx={{ padding: "2rem" }}>
             <Typography variant="h4" gutterBottom>
-                Welcome, {userProfile.email}
+                Welcome, {username}
             </Typography>
             <Typography variant="subtitle1" gutterBottom>
-                Role: {userProfile.roleName}
+                Role: {role?.slice(5)}
             </Typography>
 
             <Divider sx={{ marginY: "1.5rem" }} />
@@ -32,7 +34,7 @@ const UserDashboard: React.FC = () => {
                 )}
             </List>
 
-            {userProfile.roleName === "ADMIN" && (
+            {role === Roles.Admin && (
                 <>
                     <Divider sx={{ marginY: "1.5rem" }} />
                     <Typography variant="h5">Admin Options</Typography>

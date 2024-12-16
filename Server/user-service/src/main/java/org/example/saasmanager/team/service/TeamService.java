@@ -2,6 +2,8 @@ package org.example.saasmanager.team.service;
 
 import com.example.teams.model.CreateTeamRequest;
 import com.example.teams.model.CreateTeamResponse;
+import com.example.teams.model.TeamDTO;
+import org.example.saasmanager.team.mapper.TeamMapper;
 import org.example.saasmanager.team.repository.TeamRepository;
 import org.example.saasmanager.team.repository.UserTeamRepository;
 import org.example.saasmanager.user.repository.UserRepository;
@@ -11,19 +13,25 @@ import org.example.shared.entities.UserTeam;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.List;
 
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final UserTeamRepository userTeamRepository;
+    private final TeamMapper teamMapper;
 
     @Autowired
     public TeamService(TeamRepository teamRepository, UserRepository userRepository
-    , UserTeamRepository userTeamRepository) {
+    , UserTeamRepository userTeamRepository, TeamMapper teamMapper) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.userTeamRepository = userTeamRepository;
+        this.teamMapper = teamMapper;
     }
 
     public void addUserToTeam(Integer teamId, Integer userId) {
@@ -61,5 +69,16 @@ public class TeamService {
         response.setTeamId(savedTeam.getTeamId());
         response.setTeamName(savedTeam.getTeamName());
         return response;
+    }
+
+    public List<TeamDTO> getUserTeams(){
+        // Retrieve userId from the request attribute
+        String userId = (String) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest()
+                .getAttribute("userId");
+
+        // Use the userId to fetch teams
+        List<Team> teams = userTeamRepository.findTeamsByUserId(Integer.parseInt(userId));
+        return teamMapper.toDtoList(teams);
     }
 }

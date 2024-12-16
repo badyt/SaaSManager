@@ -47,6 +47,8 @@ components:
           format: email
         password:
           type: string
+        name:
+          type: string
         role_id:
           type: integer
           default: 1
@@ -68,4 +70,10 @@ components:
         access_token:
           type: string
         refresh_token:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        email:
           type: string

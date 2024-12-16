@@ -1,10 +1,10 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box, Card, CardContent, Avatar, Container } from "@mui/material";
+import { Typography, Box, Card, CardContent, Avatar, Container } from "@mui/material";
 import useAuthStore from "../../stores/authStore";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
-    const { token } = useAuthStore();
+    const { username, token } = useAuthStore();
     const navigate = useNavigate();
 
     if (!token)
@@ -44,7 +44,7 @@ const Home = () => {
                     U
                 </Avatar>
                 <Typography variant="h4" gutterBottom>
-                    Welcome, User!
+                    Welcome, {username}!
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
                     Manage your teams and profile, or explore the dashboard.

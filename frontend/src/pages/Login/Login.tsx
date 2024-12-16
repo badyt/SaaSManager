@@ -11,22 +11,23 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  // const [error, setError] = useState("");
-  const setToken = useAuthStore((state) => state.setToken);
+  const { setUserInfo } = useAuthStore();
+
 
 
   const handleLogin = async () => {
-    loginUser({ email: email, password: password}, {
+    loginUser({ email: email, password: password }, {
       onSuccess: (data) => {
         console.log(data);
         toast.success("User Login successfully!");
-        setToken(data.access_token);
+        setUserInfo(data.access_token, data.name, data.role, data.email);
         navigate('/');
       },
-      onError: (error) => { toast.error("something went wrong loging in user!");
+      onError: (error) => {
+        toast.error("something went wrong loging in user!");
         console.log(error);
-        
-       },
+
+      },
     });
   };
 

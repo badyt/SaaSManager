@@ -29,13 +29,21 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // Extract custom claims like userId
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    // Generate an access token with custom claims
+    public String generateToken(UserDetails userDetails, Integer userId) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", userId); // Add userId as a custom claim
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(

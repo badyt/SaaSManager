@@ -3,18 +3,25 @@ import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { useRegister } from "../../hooks/useAuth";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const { mutate: registerUser } = useRegister();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const queryClient = useQueryClient(); 
+  const [name, setName] = useState("");
+  const queryClient = useQueryClient();
   const handleRegister = async () => {
-    
-    registerUser({ email, password }, {
-      onSuccess: (data) => {toast.success("User registered successfully!"); queryClient.invalidateQueries(["users"]);},
-      onError: (error) => {toast.error("something went wrong registering user!")},
-    });
+    (email === "" || password === "" || name === "") ?
+      toast.error("Please fill in all the fields!") :
+      registerUser({ email, password, name }, {
+        onSuccess: (data) => {
+          toast.success("User registered successfully!"); queryClient.invalidateQueries(["users"]);
+          navigate("/login");
+        },
+        onError: (error) => { toast.error(`something went wrong registering user! ${error}`) },
+      });
   };
 
   return (
@@ -37,6 +44,14 @@ const Register = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          margin="normal"
+        />
+        <TextField
+          fullWidth
+          label="Name"
+          type="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           margin="normal"
         />
         <Button

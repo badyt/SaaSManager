@@ -149,6 +149,9 @@ components:
         role:
           type: integer
           description: User Role Id
+        name:
+          type: string
+          description: User Name
 
     UserCreate:
       type: object
@@ -160,6 +163,9 @@ components:
         password:
           type: string
           description: Plain text password (to be hashed server-side)
+        name:
+          type: string
+          description: User Name
 
     UserUpdate:
       type: object
@@ -178,3 +184,6 @@ components:
         role:
           type: integer
           description: User Role Id
+        name:
+          type: string
+          description: User Name

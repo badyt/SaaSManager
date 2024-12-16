@@ -26,4 +26,7 @@ public class Team {
     @JoinColumn(name = "created_by", referencedColumnName = "userId", nullable = true)
     private User createdBy;
 
+    @Column(nullable = false)
+    private String description;
+
 }

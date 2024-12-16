@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import MainAppBar from './pages/MainAppBar';
 import TeamManagement from './pages/TeamManagement';
 import UserDashboard from './pages/UserDashboard';
+import UserProfile from './pages/UserProfile';
 function App() {
 
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/teams" element={<TeamManagement />} />
           <Route path="/users" element={<UserDashboard />} />
+          <Route path="/profile" element={<UserProfile/>}/>
         </Routes>
       </Router>
     </div>
