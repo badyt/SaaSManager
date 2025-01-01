@@ -18,15 +18,12 @@ const Login = () => {
   const handleLogin = async () => {
     loginUser({ email: email, password: password }, {
       onSuccess: (data) => {
-        console.log(data);
         toast.success("User Login successfully!");
-        setUserInfo(data.access_token, data.name, data.role, data.email);
+        setUserInfo(data.user_id, data.access_token, data.name, data.role, data.email, data.status);
         navigate('/');
       },
       onError: (error) => {
         toast.error("something went wrong loging in user!");
-        console.log(error);
-
       },
     });
   };

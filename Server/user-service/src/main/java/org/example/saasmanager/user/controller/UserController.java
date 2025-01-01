@@ -3,6 +3,7 @@ package org.example.saasmanager.user.controller;
 import com.example.users.api.UsersApi;
 import com.example.users.model.UserCreate;
 import com.example.users.model.UserDTO;
+import com.example.users.model.UserPasswordUpdate;
 import com.example.users.model.UserUpdate;
 import jakarta.persistence.EntityNotFoundException;
 import org.example.saasmanager.user.service.UserService;
@@ -69,5 +70,11 @@ public class UserController implements UsersApi {
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users); // 200 OK with the list of users
+    }
+
+    @Override
+    public ResponseEntity<Void> updateUserPassword(Integer id, UserPasswordUpdate userPasswordUpdate){
+        userService.updateUserPassword(id,userPasswordUpdate.getOldPassword(),userPasswordUpdate.getNewPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

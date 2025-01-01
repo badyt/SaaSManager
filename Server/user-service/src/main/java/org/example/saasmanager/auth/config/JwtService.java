@@ -42,7 +42,7 @@ public class JwtService {
     // Generate an access token with custom claims
     public String generateToken(UserDetails userDetails, Integer userId) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("userId", userId); // Add userId as a custom claim
+        extraClaims.put("userId", String.valueOf(userId)); // Add userId as a custom claim
         return generateToken(extraClaims, userDetails);
     }
 

@@ -62,6 +62,8 @@ paths:
           required: true
           schema:
             type: integer
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -75,6 +77,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
+  /users/updateUserPassword/{id}:
+    put:
+      summary: Update Password User by ID
+      description: Update an existing user's password.
+      operationId: updateUserPassword
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPasswordUpdate'
+      responses:
+        '200':
+          description: User updated password successfully
         '404':
           description: User not found
   /users/deleteUser/{id}:
@@ -187,3 +215,10 @@ components:
         name:
           type: string
           description: User Name
+    UserPasswordUpdate:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string

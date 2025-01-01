@@ -62,9 +62,11 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user,user.getUserId());
         var refreshToken = jwtService.generateRefreshToken(user);
         return new LoginResponse()
+                .userId(user.getUserId())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .name(user.getName())
+                .status(user.getStatus())
                 .role(user.getRole().getRoleName().name())
                 .email(user.getEmail());
     }

@@ -11,6 +11,8 @@ import org.example.shared.entities.Role;
 import org.example.shared.entities.User;
 import org.example.shared.enums.RoleName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -62,6 +64,11 @@ public class UserService {
         if (userUpdateData.getEmail() != null) {
             existingUser.setEmail(userUpdateData.getEmail());
         }
+
+        if (userUpdateData.getName() != null) {
+            existingUser.setName(userUpdateData.getName());
+        }
+
         if (userUpdateData.getStatus() != null) {
             existingUser.setStatus(userUpdateData.getStatus().name());
         }
@@ -85,6 +92,17 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
         user.setStatus("deleted");
+        userRepository.save(user);
+    }
+
+    public void updateUserPassword (Integer userId, String oldPassword, String newPassword ){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        // Validate old password
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Current Password is incorrect!");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }

@@ -22,12 +22,14 @@ public interface UserMapper {
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "localDateTimeToOffsetDateTime")
     @Mapping(source = "updatedAt", target = "updatedAt", qualifiedByName = "localDateTimeToOffsetDateTime")
     @Mapping(source = "role", target = "role", qualifiedByName = "roleToRoleId")
+    @Mapping(source = "status", target = "status", qualifiedByName = "stringToStatusEnum")
     UserDTO toDto(User user);
 
     // Map UserDTO to User with custom date conversion
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "offsetDateTimeToLocalDateTime")
     @Mapping(source = "updatedAt", target = "updatedAt", qualifiedByName = "offsetDateTimeToLocalDateTime")
     @Mapping(source = "role", target = "role", qualifiedByName = "roleIdToRole")
+    @Mapping(source = "status", target = "status", qualifiedByName = "statusEnumToString")
     User toEntity(UserDTO userDTO, @Context RoleRepository roleRepository);
 
     // List mappings
@@ -61,5 +63,22 @@ public interface UserMapper {
         }
         Optional<Role> role = roleRepository.findById(roleId);
         return role.orElse(null);
+    }
+
+    @Named("stringToStatusEnum")
+    default UserDTO.StatusEnum stringToStatusEnum(String status) {
+        if (status == null) {
+            return null;
+        }
+        try {
+            return UserDTO.StatusEnum.fromValue(status);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid status value: " + status, e);
+        }
+    }
+
+    @Named("statusEnumToString")
+    default String statusEnumToString(UserDTO.StatusEnum statusEnum) {
+        return statusEnum != null ? statusEnum.getValue() : null;
     }
 }

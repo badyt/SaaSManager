@@ -67,6 +67,8 @@ components:
     LoginResponse:
       type: object
       properties:
+        user_id:
+          type: integer
         access_token:
           type: string
         refresh_token:
@@ -76,4 +78,6 @@ components:
         role:
           type: string
         email:
+          type: string
+        status:
           type: string
