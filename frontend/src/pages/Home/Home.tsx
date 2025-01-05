@@ -2,20 +2,16 @@ import React from "react";
 import { Typography, Box, Card, CardContent, Avatar, Container } from "@mui/material";
 import useAuthStore from "../../stores/authStore";
 import { Navigate, useNavigate } from "react-router-dom";
+import { Roles } from "../../constants/roles";
 
 const Home = () => {
-    const { username, token } = useAuthStore();
+    const { username, token, role } = useAuthStore();
     const navigate = useNavigate();
 
     if (!token)
         return <Navigate to="/login" />;
 
-    const features = [
-        {
-            title: "Manage Teams",
-            description: "Create, manage, and assign users to teams.",
-            onClick: () => navigate("/teams"),
-        },
+    const userFeatures = [
         {
             title: "Profile Management",
             description: "View and update your profile details.",
@@ -27,6 +23,17 @@ const Home = () => {
             onClick: () => navigate("/users"),
         },
     ];
+
+    const adminFeatures = [
+        {
+            title: "Manage Teams",
+            description: "Create, manage, and assign users to teams.",
+            onClick: () => navigate("/teams"),
+        },
+        ...userFeatures
+    ];
+
+    const features = (role === Roles.Admin) ? adminFeatures : userFeatures;
 
     return (
         <Container>

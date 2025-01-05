@@ -1,8 +1,6 @@
 package org.example.saasmanager.team.service;
 
-import com.example.teams.model.CreateTeamRequest;
-import com.example.teams.model.CreateTeamResponse;
-import com.example.teams.model.TeamDTO;
+import com.example.teams.model.*;
 import org.example.saasmanager.team.mapper.TeamMapper;
 import org.example.saasmanager.team.repository.TeamRepository;
 import org.example.saasmanager.team.repository.UserTeamRepository;
@@ -17,6 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -63,6 +62,7 @@ public class TeamService {
         }
         Team newTeam = new Team();
         newTeam.setTeamName(request.getTeamName());
+        newTeam.setDescription(request.getDescription());
         newTeam.setCreatedBy(creator);
         Team savedTeam = teamRepository.save(newTeam);
         CreateTeamResponse response = new CreateTeamResponse();
@@ -80,5 +80,41 @@ public class TeamService {
         // Use the userId to fetch teams
         List<Team> teams = userTeamRepository.findTeamsByUserId(Integer.parseInt(userId));
         return teamMapper.toDtoList(teams);
+    }
+
+    public List<TeamDTO> getAllTeams(){
+        List<Team> teams = teamRepository.findAll();
+        return teamMapper.toDtoList(teams);
+    }
+
+    public void removeUserFromTeam(Integer teamId, RemoveUserRequest removeUserRequest){
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(removeUserRequest.getUserId(),teamId)
+                .orElseThrow(() -> new IllegalArgumentException("UserTeam not found" ));
+        userTeamRepository.delete(userTeam);
+    }
+
+    public List<TeamWithUsersDTO> getAllTeamsWithUsers() {
+        // Fetch all teams
+        List<Team> teams = teamRepository.findAll();
+
+        // Map teams to DTOs with user details
+        return teams.stream().map(team -> {
+            List<User> users = userTeamRepository.findUsersByTeamId(team.getTeamId());
+
+            // Convert users to UserDTO
+            List<UserInTeamDTO> userDTOs = users.stream().map(user -> {
+                UserInTeamDTO userDTO = new UserInTeamDTO();
+                userDTO.setUserId(user.getUserId());
+                userDTO.setUserName(user.getName());
+                return userDTO;
+            }).collect(Collectors.toList());
+
+            // Create TeamWithUsersDTO
+            TeamWithUsersDTO teamWithUsersDTO = new TeamWithUsersDTO();
+            teamWithUsersDTO.setTeam(teamMapper.toTeamDTO(team));
+            teamWithUsersDTO.setUsers(userDTOs);
+
+            return teamWithUsersDTO;
+        }).collect(Collectors.toList());
     }
 }

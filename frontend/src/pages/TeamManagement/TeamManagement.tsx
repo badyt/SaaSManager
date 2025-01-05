@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import {
-    useFetchAllTeams,
     useCreateTeam,
     useAddUserToTeam,
     useRemoveUserFromTeam,
+    useFetchAllTeamsWithUsers,
 } from "../../hooks/useTeams";
 import {
     Box,
     Typography,
-    List,
-    ListItem,
     Button,
     Dialog,
     DialogTitle,
@@ -17,9 +15,15 @@ import {
     TextField,
     DialogActions,
 } from "@mui/material";
+import useAuthStore from "../../stores/authStore";
+import { toast } from "react-toastify";
+import TeamList from "./TeamList";
+import { useQueryClient } from "react-query";
 
 const TeamManagement: React.FC = () => {
-    const { data: teams } = useFetchAllTeams();
+    const { userId } = useAuthStore();
+    const { data: teams } = useFetchAllTeamsWithUsers();
+    const queryClient = useQueryClient();
     const createTeamMutation = useCreateTeam();
     const addUserMutation = useAddUserToTeam();
     const removeUserMutation = useRemoveUserFromTeam();
@@ -27,26 +31,46 @@ const TeamManagement: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [newTeamName, setNewTeamName] = useState("");
     const [newTeamDescription, setNewTeamDescription] = useState("");
-    const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
-    const [userIdToAdd, setUserIdToAdd] = useState("");
 
     const handleCreateTeam = () => {
+        if (!userId)
+            return toast.error("error finding user id to create the team!");
+
+        if (!newTeamName || !newTeamDescription)
+            return toast.error("please fill both team name and team description!");
         createTeamMutation.mutate(
-            { teamName: newTeamName },
+            { team_name: newTeamName, created_by: userId, description: newTeamDescription },
             {
-                onSuccess: () => setOpen(false),
+                onSuccess: () => { toast.success("successfully created team!"); setOpen(false);
+                    queryClient.invalidateQueries(["teamsWithUsers"]);
+                 },
+                onError: (error) => { toast.error(`error occurred creating team: ${error}`) }
             }
         );
     };
 
-    const handleAddUser = () => {
-        if (selectedTeamId) {
-            addUserMutation.mutate({ teamId: selectedTeamId, userId: parseInt(userIdToAdd) });
-        }
+    const handleAddUser = (teamId: number, userId: number) => {
+        addUserMutation.mutate({ teamId: teamId, userId: userId }
+            , {
+                onSuccess: () => {
+                    toast.success("successfully added user to team!");
+                    queryClient.invalidateQueries(["teamsWithUsers"]);
+                },
+                onError: (error) => { toast.error(`error occurred adding the user to team: ${error}`) }
+            });
+
     };
 
     const handleRemoveUser = (teamId: number, userId: number) => {
-        removeUserMutation.mutate({ teamId, userId });
+        removeUserMutation.mutate({ teamId, userId },
+            {
+                onSuccess: () => {
+                    toast.success("successfully removed user from team!");
+                    queryClient.invalidateQueries(["teamsWithUsers"]);
+                },
+                onError: (error) => { toast.error(`error occurred removing the user from team: ${error}`) }
+            }
+        );
     };
 
     return (
@@ -72,12 +96,14 @@ const TeamManagement: React.FC = () => {
                         fullWidth
                         value={newTeamName}
                         onChange={(e) => setNewTeamName(e.target.value)}
+                        sx={{ marginTop: "0.5rem" }}
                     />
                     <TextField
                         label="Team Description"
                         fullWidth
                         value={newTeamDescription}
                         onChange={(e) => setNewTeamDescription(e.target.value)}
+                        sx={{ marginTop: "1rem" }}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -88,40 +114,7 @@ const TeamManagement: React.FC = () => {
                 </DialogActions>
             </Dialog>
 
-            <List>
-                {teams?.map((team: { teamId: number; teamName: string }) => (
-                    <ListItem key={team.teamId} sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography>{team.teamName}</Typography>
-                        <Box>
-                            <TextField
-                                size="small"
-                                label="User ID"
-                                value={selectedTeamId === team.teamId ? userIdToAdd : ""}
-                                onChange={(e) => setUserIdToAdd(e.target.value)}
-                                onFocus={() => setSelectedTeamId(team.teamId)}
-                                sx={{ marginRight: "0.5rem" }}
-                            />
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={handleAddUser}
-                                disabled={addUserMutation.isLoading}
-                            >
-                                Add User
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                onClick={() => handleRemoveUser(team.teamId, parseInt(userIdToAdd))}
-                                sx={{ marginLeft: "0.5rem" }}
-                                disabled={removeUserMutation.isLoading}
-                            >
-                                Remove User
-                            </Button>
-                        </Box>
-                    </ListItem>
-                ))}
-            </List>
+            <TeamList teams={teams || []} onAddUser={handleAddUser} onRemoveUser={handleRemoveUser} />
         </Box>
     );
 };

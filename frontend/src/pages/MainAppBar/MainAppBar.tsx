@@ -2,9 +2,10 @@ import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
+import { Roles } from "../../constants/roles";
 
 const MainAppBar: React.FC = () => {
-    const { token, logout } = useAuthStore();
+    const { token, role, logout } = useAuthStore();
     const navigate = useNavigate();
     const handleLogout = () => {
         logout();
@@ -24,9 +25,9 @@ const MainAppBar: React.FC = () => {
                 <Button color="inherit" onClick={() => navigate("/")}>
                     Home
                 </Button>
-                <Button color="inherit" onClick={() => navigate("/teams")}>
+                {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/teams")}>
                     Teams
-                </Button>
+                </Button>}
                 <Button color="inherit" onClick={() => navigate("/profile")}>
                     Profile
                 </Button>

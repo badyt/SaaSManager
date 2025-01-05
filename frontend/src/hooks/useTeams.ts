@@ -4,12 +4,17 @@ import {
   createTeam,
   addUserToTeam,
   removeUserFromTeam,
+  fetchAllTeamsWithUsers,
 } from "../api/teamsApi";
 
 // Queries
 export const useFetchAllTeams = () => {
   return useQuery(["teams"], fetchAllTeams);
 };
+
+export const useFetchAllTeamsWithUsers = () => {
+  return useQuery(["teamsWithUsers"], fetchAllTeamsWithUsers)
+}
 
 // Mutations
 export const useCreateTeam = () => {

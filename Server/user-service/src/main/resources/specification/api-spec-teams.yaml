@@ -5,6 +5,38 @@ info:
   description: API for managing teams and their members.
 
 paths:
+  /teams/getAllTeams:
+    get:
+      summary: Get All Teams
+      description: get all teams
+      operationId: getAllTeams
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: List of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamDTO'
+  /teams/getAllTeamsWithUsers:
+    get:
+      summary: Get All Teams with their users
+      description: get all teams with their users
+      operationId: getAllTeamsWithUsers
+      tags:
+        - Teams
+      responses:
+        '200':
+          description: List of teams with their users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamWithUsersDTO'
   /teams/createTeam:
     post:
       summary: Create a new team
@@ -51,6 +83,31 @@ paths:
       responses:
         '200':
           description: User added to the team successfully
+        '404':
+          description: Team or User not found
+  /teams/{team_id}/remove_user:
+    delete:
+      summary: remove a user from a team
+      description: Remove a user from a specific team by providing their user ID.
+      operationId: removeUserFromTeam
+      tags:
+        - Teams
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveUserRequest'
+      responses:
+        '200':
+          description: User removed from the team successfully
         '404':
           description: Team or User not found
   /teams/my-teams:
@@ -117,7 +174,6 @@ components:
         team_name:
           type: string
           description: Name of the created team
-
     AddUserRequest:
       type: object
       properties:
@@ -126,3 +182,31 @@ components:
           description: User ID of the user to be added
       required:
         - user_id
+    RemoveUserRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: User ID of the user to be added
+      required:
+        - user_id
+
+    UserInTeamDTO:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        user_name:
+          type: string
+
+    TeamWithUsersDTO:
+      type: object
+      properties:
+        team:
+          $ref: '#/components/schemas/TeamDTO'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserInTeamDTO'
+
+
