@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: Subscription Service API
+  version: 1.0.0
+  description: API for managing SaaS subscriptions.
+paths:
+  /subscriptions/createNewSubscription:
+    post:
+      summary: Create a new subscription
+      description: Adds a new subscription for a SaaS tool.
+      operationId: createNewSubscription
+      tags:
+        - Subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSubscription'
+      responses:
+        '201':
+          description: Subscription successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDTO'
+        '400':
+          description: Bad request. Invalid input data.
+        '500':
+          description: Internal server error.
+  /subscriptions/getAllSubscriptions:
+    get:
+      summary: Get all subscriptions
+      description: Retrieves a list of all subscriptions.
+      operationId: getAllSubscriptions
+      tags:
+        - Subscriptions
+      responses:
+        '200':
+          description: A list of subscriptions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubscriptionDTO'
+        '500':
+          description: Internal server error.
+
+  /subscriptions/{subscription_id}/getSubscription:
+    get:
+      summary: Fetch details of a specific subscription
+      description: Retrieves detailed information for a specific subscription.
+      operationId: getSubscriptionById
+      tags:
+        - Subscriptions
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the subscription to fetch.
+      responses:
+        '200':
+          description: Details of the subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDTO'
+        '404':
+          description: Subscription not found.
+        '500':
+          description: Internal server error.
+  /subscriptions/{subscription_id}/updateSubscription:
+    put:
+      summary: Update subscription details
+      description: Updates the details of a specific subscription.
+      operationId: updateSubscription
+      tags:
+        - Subscriptions
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the subscription to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscription'
+      responses:
+        '200':
+          description: Subscription successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDTO'
+        '400':
+          description: Bad request. Invalid input data.
+        '404':
+          description: Subscription not found.
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    NewSubscription:
+      type: object
+      required:
+        - tool_id
+        - renewal_date
+        - cost
+      properties:
+        tool_id:
+          type: integer
+          description: ID of the SaaS tool from the catalog.
+          example: 1
+        renewal_date:
+          type: string
+          format: date
+          description: Subscription renewal date.
+          example: "2025-01-01"
+        cost:
+          type: number
+          format: float
+          description: Cost of the subscription.
+          example: 99.99
+        license_count:
+          type: integer
+          description: Total licenses number that can be allocated
+
+    UpdateSubscription:
+      type: object
+      properties:
+        renewal_date:
+          type: string
+          format: date
+          description: Updated subscription renewal date.
+          example: "2025-12-31"
+        cost:
+          type: number
+          format: float
+          description: Updated cost of the subscription.
+          example: 120.00
+        license_count:
+          type: integer
+          description: Total licenses number that can be allocated
+
+    SubscriptionDTO:
+      type: object
+      properties:
+        subscription_id:
+          type: integer
+          description: Unique identifier for the subscription.
+          example: 10
+        tool_id:
+          type: integer
+          description: ID of the associated SaaS tool.
+          example: 1
+        renewal_date:
+          type: string
+          format: date
+          description: Subscription renewal date.
+          example: "2025-01-01"
+        cost:
+          type: number
+          format: float
+          description: Cost of the subscription.
+          example: 99.99
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the subscription was created.
+          example: "2025-01-01T12:00:00Z"
+        license_count:
+          type: integer
+          description: Total licenses number that can be allocated

@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: Usage Monitoring API
+  version: 1.0.0
+  description: API for monitoring SaaS usage and detecting inefficiencies.
+paths:
+  /usage/logs:
+    get:
+      summary: Fetch usage logs
+      description: Retrieves usage logs for analysis of user activities and tool usage.
+      operationId: getUsageLogs
+      tags:
+        - Usage Monitoring
+      parameters:
+        - name: start_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Start date for filtering logs (optional).
+        - name: end_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: End date for filtering logs (optional).
+      responses:
+        '200':
+          description: A list of usage logs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsageLog'
+        '400':
+          description: Bad request. Invalid query parameters.
+        '500':
+          description: Internal server error.
+
+  /usage/underutilized:
+    get:
+      summary: Detect underutilized subscriptions
+      description: Identifies underutilized or unused subscriptions based on user activity data.
+      operationId: detectUnderutilizedSubs
+      tags:
+        - Usage Monitoring
+      responses:
+        '200':
+          description: A list of underutilized subscriptions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UnderutilizedSubscription'
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    UsageLog:
+      type: object
+      properties:
+        log_id:
+          type: integer
+          description: Unique identifier for the usage log.
+          example: 1001
+        user_id:
+          type: integer
+          description: The ID of the user associated with the activity.
+          example: 101
+        tool_id:
+          type: integer
+          description: The ID of the SaaS tool being used.
+          example: 10
+        activity_date:
+          type: string
+          format: date-time
+          description: Timestamp of the activity.
+          example: "2025-01-01T12:00:00Z"
+        activity_type:
+          type: string
+          description: Type of activity performed.
+          example: "Login"
+
+    UnderutilizedSubscription:
+      type: object
+      properties:
+        subscription_id:
+          type: integer
+          description: Unique identifier for the subscription.
+          example: 10
+        tool_name:
+          type: string
+          description: Name of the SaaS tool associated with the subscription.
+          example: "Google Workspace"
+        user_count:
+          type: integer
+          description: Number of users assigned to the subscription.
+          example: 5
+        last_active_date:
+          type: string
+          format: date
+          description: Date when the subscription was last actively used.
+          example: "2024-12-15"
+        underutilization_score:
+          type: number
+          format: float
+          description: Score indicating the level of underutilization (e.g., 0 to 1 scale).
+          example: 0.8

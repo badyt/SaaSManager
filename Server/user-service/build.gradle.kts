@@ -1,4 +1,5 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import java.util.*
 
 plugins {
     java
@@ -64,56 +65,37 @@ tasks.withType<Test> {
 val generatedSourcesPath = layout.buildDirectory.dir("generated").get().asFile.path
 val apiDescriptionFilesPath = "$rootDir/user-service/src/main/resources/specification"
 
-openApiGenerate {
-    generatorName.set("spring")
-    inputSpec.set("$apiDescriptionFilesPath/api-spec-users.yaml")
-    outputDir.set(generatedSourcesPath)
-    apiPackage.set("com.example.users.api")    // Set your API package
-    modelPackage.set("com.example.users.model") // Set your Model package
-    configOptions.set(
-        mapOf(
-            "useSpringBoot3" to "true",
-            "interfaceOnly" to "true"
-        )
-    )
-}
+val generateTasks = file(apiDescriptionFilesPath).listFiles { file ->
+    file.extension == "yaml" || file.extension == "yml"
+}?.map { specFile ->
+    val specName = specFile.nameWithoutExtension
+    val apiPackageName = "com.example.${specName}.api"
+    val modelPackageName = "com.example.${specName}.model"
 
-
-val generateAuthApi by tasks.registering(GenerateTask::class) {
-    generatorName.set("spring")
-    inputSpec.set("$apiDescriptionFilesPath/api-spec-auth.yaml")
-    outputDir.set(generatedSourcesPath)
-    apiPackage.set("com.example.auth.api")
-    modelPackage.set("com.example.auth.model")
-    configOptions.set(
-        mapOf(
-            "interfaceOnly" to "true",
-            "useSpringBoot3" to "true"
+    tasks.register("generate${specName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}Api", GenerateTask::class) {
+        generatorName.set("spring")
+        inputSpec.set(specFile.absolutePath)
+        outputDir.set(generatedSourcesPath)
+        apiPackage.set(apiPackageName)
+        modelPackage.set(modelPackageName)
+        configOptions.set(
+            mapOf(
+                "interfaceOnly" to "true",
+                "useSpringBoot3" to "true"
+            )
         )
-    )
-//    typeMappings.set(mapOf("integer" to "Long"))
-}
+    }
+} ?: emptyList()
 
-val generateTeamApi by tasks.registering(GenerateTask::class) {
-    generatorName.set("spring")
-    inputSpec.set("$apiDescriptionFilesPath/api-spec-teams.yaml")
-    outputDir.set(generatedSourcesPath)
-    apiPackage.set("com.example.teams.api")
-    modelPackage.set("com.example.teams.model")
-    configOptions.set(
-        mapOf(
-            "interfaceOnly" to "true",
-            "useSpringBoot3" to "true"
-        )
-    )
+// Register a parent task to depend on all dynamically created tasks
+tasks.register("generateOpenApiCode") {
+    dependsOn(generateTasks)
 }
 
 sourceSets["main"].java.srcDir("$generatedSourcesPath/src/main/java")
 
 tasks.withType<JavaCompile> {
-    dependsOn("openApiGenerate")
-    dependsOn("generateAuthApi")
-    dependsOn("generateTeamApi")
+    dependsOn("generateOpenApiCode")
 }
 
 flyway {

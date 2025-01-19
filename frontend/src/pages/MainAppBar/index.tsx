@@ -28,6 +28,9 @@ const MainAppBar: React.FC = () => {
                 {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/teams")}>
                     Teams
                 </Button>}
+                {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/catalog")}>
+                    Catalog
+                </Button>}
                 <Button color="inherit" onClick={() => navigate("/profile")}>
                     Profile
                 </Button>

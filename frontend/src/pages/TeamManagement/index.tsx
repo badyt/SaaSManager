@@ -19,10 +19,15 @@ import useAuthStore from "../../stores/authStore";
 import { toast } from "react-toastify";
 import TeamList from "./TeamList";
 import { useQueryClient } from "react-query";
+import { useUsers } from "../../hooks/useUsers";
 
 const TeamManagement: React.FC = () => {
     const { userId } = useAuthStore();
     const { data: teams } = useFetchAllTeamsWithUsers();
+    const { data: users } = useUsers();
+
+    console.log("User : " + users);
+
     const queryClient = useQueryClient();
     const createTeamMutation = useCreateTeam();
     const addUserMutation = useAddUserToTeam();
@@ -31,6 +36,7 @@ const TeamManagement: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [newTeamName, setNewTeamName] = useState("");
     const [newTeamDescription, setNewTeamDescription] = useState("");
+
 
     const handleCreateTeam = () => {
         if (!userId)
@@ -41,9 +47,10 @@ const TeamManagement: React.FC = () => {
         createTeamMutation.mutate(
             { team_name: newTeamName, created_by: userId, description: newTeamDescription },
             {
-                onSuccess: () => { toast.success("successfully created team!"); setOpen(false);
+                onSuccess: () => {
+                    toast.success("successfully created team!"); setOpen(false);
                     queryClient.invalidateQueries(["teamsWithUsers"]);
-                 },
+                },
                 onError: (error) => { toast.error(`error occurred creating team: ${error}`) }
             }
         );
@@ -58,7 +65,6 @@ const TeamManagement: React.FC = () => {
                 },
                 onError: (error) => { toast.error(`error occurred adding the user to team: ${error}`) }
             });
-
     };
 
     const handleRemoveUser = (teamId: number, userId: number) => {
@@ -114,7 +120,12 @@ const TeamManagement: React.FC = () => {
                 </DialogActions>
             </Dialog>
 
-            <TeamList teams={teams || []} onAddUser={handleAddUser} onRemoveUser={handleRemoveUser} />
+            <TeamList teams={teams || []} onAddUser={handleAddUser} onRemoveUser={handleRemoveUser} availableUsers={users?.map((user: UserDTO) => (
+                {
+                    user_id: user.userId,
+                    user_name: user.name
+                }
+            ))} />
         </Box>
     );
 };

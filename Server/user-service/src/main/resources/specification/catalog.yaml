@@ -1,0 +1,118 @@
+openapi: 3.0.3
+info:
+  title: Catalog Service API
+  version: 1.0.0
+  description: API for managing the SaaS tools catalog.
+paths:
+  /catalog/getCatalog:
+    get:
+      summary: Fetch all available SaaS tools
+      description: Retrieves a list of all SaaS tools available in the catalog.
+      operationId: getCatalog
+      tags:
+        - Catalog
+      responses:
+        '200':
+          description: A list of SaaS tools.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SaaSTool'
+        '500':
+          description: Internal server error.
+  /catalog/addSaaSTool:
+    post:
+      summary: Add a new SaaS tool
+      description: Adds a new SaaS tool to the catalog. Admin-only endpoint.
+      operationId: addSaaSTool
+      tags:
+        - Catalog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewSaaSTool'
+      responses:
+        '201':
+          description: SaaS tool successfully added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaaSTool'
+        '400':
+          description: Bad request. Invalid input data.
+        '401':
+          description: Unauthorized. Only admins can access this endpoint.
+        '500':
+          description: Internal server error.
+  /catalog/removeTool/{tool_id}:
+    delete:
+      summary: remove a tool from catalog
+      description: Remove a tool from a catalog by providing tool ID.
+      operationId: removeTool
+      tags:
+        - Catalog
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the tool
+      responses:
+        '204':
+          description: tool successfully removed.
+        '404':
+          description: tool was not found.
+        '500':
+          description: Internal server error.
+components:
+  schemas:
+    SaaSTool:
+      type: object
+      properties:
+        tool_id:
+          type: integer
+          description: Unique identifier for the SaaS tool.
+          example: 1
+        name:
+          type: string
+          description: Name of the SaaS tool.
+          example: "Google Workspace"
+        description:
+          type: string
+          description: Description of the SaaS tool.
+          example: "A set of productivity tools by Google."
+        default_cost:
+          type: number
+          description: Default cost of the SaaS tool.
+          example: 99.99
+        created_at:
+          type: string
+          format: date-time
+          description: The timestamp when the SaaS tool was added.
+          example: "2025-01-01T12:00:00Z"
+
+    NewSaaSTool:
+      type: object
+      required:
+        - name
+        - description
+        - default_cost
+      properties:
+        name:
+          type: string
+          description: Name of the SaaS tool.
+          example: "Google Workspace"
+        description:
+          type: string
+          description: Description of the SaaS tool.
+          example: "A set of productivity tools by Google."
+        default_cost:
+          type: number
+          format: float
+          description: Default cost of the SaaS tool.
+          example: 99.99

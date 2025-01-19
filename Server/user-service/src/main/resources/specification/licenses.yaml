@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: License Management API
+  version: 1.0.0
+  description: API for managing SaaS licenses.
+paths:
+  /licenses/allocateLicense:
+    post:
+      summary: Allocate a license to a user
+      description: Allocates a license for a user to a specific subscription.
+      operationId: allocateLicense
+      tags:
+        - Licenses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewLicense'
+      responses:
+        '201':
+          description: License successfully allocated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseDTO'
+        '400':
+          description: Bad request. Invalid input data.
+        '404':
+          description: Subscription or user not found.
+        '500':
+          description: Internal server error.
+
+  /licenses/{license_id}/revokeLicense:
+    delete:
+      summary: Revoke a license
+      description: Revokes a license by its ID.
+      operationId: revokeLicense
+      tags:
+        - Licenses
+      parameters:
+        - name: license_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the license to revoke.
+      responses:
+        '204':
+          description: License successfully revoked.
+        '404':
+          description: License not found.
+        '500':
+          description: Internal server error.
+
+  /licenses/{subscription_id}/getAllBySubscription:
+    get:
+      summary: Get all licenses for a subscription
+      description: Retrieves a list of all licenses allocated to a specific subscription.
+      operationId: getAllBySubscription
+      tags:
+        - Licenses
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the subscription.
+      responses:
+        '200':
+          description: A list of licenses for the subscription.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LicenseDTO'
+        '404':
+          description: Subscription not found.
+        '500':
+          description: Internal server error.
+  /licenses/{user_id}/getAllByUser:
+    get:
+      summary: Get all licenses for a user
+      description: Retrieves a list of all licenses allocated to a specific user.
+      operationId: getAllByUser
+      tags:
+        - Licenses
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the subscription.
+      responses:
+        '200':
+          description: A list of licenses for the user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LicenseDTO'
+        '404':
+          description: Subscription not found.
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    NewLicense:
+      type: object
+      required:
+        - subscription_id
+        - user_id
+      properties:
+        subscription_id:
+          type: integer
+          description: The ID of the subscription to allocate the license to.
+          example: 10
+        user_id:
+          type: integer
+          description: The ID of the user to whom the license will be allocated.
+          example: 101
+
+    LicenseDTO:
+      type: object
+      properties:
+        license_id:
+          type: integer
+          description: Unique identifier for the license.
+          example: 1
+        subscription_id:
+          type: integer
+          description: The ID of the associated subscription.
+          example: 10
+        user_id:
+          type: integer
+          description: The ID of the user to whom the license is allocated.
+          example: 101
+        allocated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the license was allocated.
+          example: "2025-01-01T12:00:00Z"
+        last_used_at:
+          type: string
+          format: date-time
+          description: Timestamp when the license was last used.
+          example: "2025-01-01T12:00:00Z"

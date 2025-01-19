@@ -2,7 +2,11 @@ import useAuthStore from "../stores/authStore";
 import apiClient from "./apiClient";
 
 export const fetchUsers = async () => {
-  const response = await apiClient.get("/users");
+  const { token } = useAuthStore.getState();
+  const response = await apiClient.get("/users/getUsers",
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   return response.data;
 };
 
@@ -43,7 +47,7 @@ export const updateUser = async (data: Partial<{ id: number; email: string; stat
   return response.data;
 }
 
-export const updateUserPassword = async (data: {id : number, oldPassword: string,  newPassword : string}) => {
+export const updateUserPassword = async (data: { id: number, oldPassword: string, newPassword: string }) => {
   const { token } = useAuthStore.getState();
   const response = await apiClient.put(`/users/updateUserPassword/${data.id}`,
     data, {

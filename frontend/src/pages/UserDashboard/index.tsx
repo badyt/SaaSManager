@@ -3,11 +3,12 @@ import { useUserTeams } from "../../hooks/useUsers";
 import { Box, Typography, List, ListItem, Divider, Button } from "@mui/material";
 import useAuthStore from "../../stores/authStore";
 import { Roles } from "../../constants/roles";
+import { useNavigate } from "react-router-dom";
 
 const UserDashboard: React.FC = () => {
     const { username, role } = useAuthStore()
     const { data: userTeams } = useUserTeams();
-
+    const navigate = useNavigate();
     if (!username) return <Typography>Loading...</Typography>;
 
     return (
@@ -41,7 +42,7 @@ const UserDashboard: React.FC = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        href="/team-management"
+                        onClick={() => navigate("/teams")}
                         sx={{ marginTop: "1rem" }}
                     >
                         Manage Teams

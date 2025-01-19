@@ -4,12 +4,12 @@ import {
     Typography,
     List,
     ListItem,
-    TextField,
     Button,
     Divider,
     Avatar,
 } from "@mui/material";
 import { toast } from "react-toastify";
+import AddUserDialog from "./AddUserDialog";
 
 interface User {
     user_id: number;
@@ -31,13 +31,36 @@ interface TeamListProps {
     teams: TeamEntry[];
     onAddUser: (teamId: number, userId: number) => void;
     onRemoveUser: (teamId: number, userId: number) => void;
+    availableUsers: User[]; // List of all available users
 }
 
-const TeamList: React.FC<TeamListProps> = ({ teams, onAddUser, onRemoveUser }) => {
-    console.log(teams);
-    const [selectedUserId, setSelectedUserId] = useState<{ [key: number]: string }>({});
-    const handleUserIdChange = (teamId: number, value: string) => {
-        setSelectedUserId((prev) => ({ ...prev, [teamId]: value }));
+const TeamList: React.FC<TeamListProps> = ({ teams, onAddUser, onRemoveUser, availableUsers }) => {
+    const [openDialog, setOpenDialog] = useState<{ [key: number]: boolean }>({});
+    const [selectedUser, setSelectedUser] = useState<{ [key: number]: number | null }>({});
+
+    const handleDialogOpen = (teamId: number) => {
+        setOpenDialog({ [teamId]: true });
+    };
+
+    const handleDialogClose = (teamId: number) => {
+        setOpenDialog({ [teamId]: false });
+        setSelectedUser({ [teamId]: null });
+    };
+
+    const handleUserSelect = (teamId: number, userId: number) => {
+        setSelectedUser({ [teamId]: userId });
+        console.log(selectedUser);
+
+    };
+
+    const handleAddUser = (teamId: number) => {
+        const userId = selectedUser[teamId];
+        if (userId !== null) {
+            onAddUser(teamId, userId);
+            handleDialogClose(teamId);
+        } else {
+            toast.error("Please select a user to add.");
+        }
     };
 
     return (
@@ -97,29 +120,24 @@ const TeamList: React.FC<TeamListProps> = ({ teams, onAddUser, onRemoveUser }) =
                         </List>
                     </Box>
                     <Divider sx={{ margin: "1rem 0" }} />
-                    <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                        <TextField
-                            label="User ID"
-                            size="small"
-                            value={selectedUserId[teamEntry.team.id] || ""}
-                            onChange={(e) => handleUserIdChange(teamEntry.team.id, e.target.value)}
-                        />
+                    <Box>
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => {
-                                const userId = parseInt(selectedUserId[teamEntry.team.id], 10);
-                                if (!isNaN(userId)) {
-                                    onAddUser(teamEntry.team.id, userId);
-                                    setSelectedUserId((prev) => ({ ...prev, [teamEntry.team.id]: "" }));
-                                } else {
-                                    toast.error("Please enter a valid user ID.");
-                                }
-                            }}
+                            onClick={() => handleDialogOpen(teamEntry.team.id)}
                         >
                             Add User
                         </Button>
                     </Box>
+                    <AddUserDialog
+                        open={!!openDialog[teamEntry.team.id]}
+                        onClose={() => handleDialogClose(teamEntry.team.id)}
+                        onAddUser={() => handleAddUser(teamEntry.team.id)}
+                        availableUsers={availableUsers}
+                        selectedUserId={selectedUser[teamEntry.team.id] || null}
+                        handleUserSelect={handleUserSelect}
+                        teamId={teamEntry.team.id}
+                    />
                 </Box>
             ))}
         </Box>
