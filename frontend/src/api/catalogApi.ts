@@ -24,3 +24,11 @@ export const removeSaaSTool = async (toolId: number) => {
     });
     return response.data;
 };
+
+export const getTool = async (tool_id : number) => {
+    const { token } = useAuthStore.getState();
+    const response = await apiClient.get(`/catalog/getTool/${tool_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};

@@ -105,7 +105,27 @@ paths:
           description: Subscription not found.
         '500':
           description: Internal server error.
-
+  /subscriptions/removeSubscription/{subscription_id}:
+    delete:
+      summary: delete a subscription
+      description: delete subscription by providing subscription ID.
+      operationId: deleteSubscription
+      tags:
+        - Subscriptions
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the subscription
+      responses:
+        '204':
+          description: subscription successfully removed.
+        '404':
+          description: subscription was not found.
+        '500':
+          description: Internal server error.
 components:
   schemas:
     NewSubscription:

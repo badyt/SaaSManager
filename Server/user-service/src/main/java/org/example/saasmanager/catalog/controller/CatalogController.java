@@ -34,6 +34,12 @@ public class CatalogController implements CatalogApi {
     }
 
     @Override
+    public ResponseEntity<SaaSTool> getTool(Integer toolId){
+        SaaSTool tool = catalogService.getToolById(toolId);
+        return new ResponseEntity<>(tool,HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<Void> removeTool(Integer toolId) {
         try {
             catalogService.deleteTool(toolId);
@@ -42,4 +48,6 @@ public class CatalogController implements CatalogApi {
             return ResponseEntity.notFound().build(); // 404 Not Found if tool doesn't exist
         }
     }
+
+
 }

@@ -25,12 +25,23 @@ const Home = () => {
     ];
 
     const adminFeatures = [
+        ...userFeatures,
         {
             title: "Manage Teams",
             description: "Create, manage, and assign users to teams.",
             onClick: () => navigate("/teams"),
         },
-        ...userFeatures
+        {
+            title: "View Catalog",
+            description: "View and manage Catalog.",
+            onClick: () => navigate("/catalog")
+        },
+        {
+            title: "View Subscriptions",
+            description: "View and manage Subscriptions.",
+            onClick: () => navigate("/subscriptions")
+        },
+        
     ];
 
     const features = (role === Roles.Admin) ? adminFeatures : userFeatures;

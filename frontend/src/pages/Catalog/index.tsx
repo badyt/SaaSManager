@@ -15,14 +15,6 @@ import AddToolDialog from "./AddToolDialog";
 import { useQueryClient } from "react-query";
 import ToolDetailsDialog from "./ToolDetailsDialog";
 
-interface CatalogTool {
-  tool_id: number;
-  name: string;
-  description: string;
-  default_cost: number;
-  created_at: string;
-}
-
 const CatalogPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: catalog } = useFetchCatalog();
@@ -60,7 +52,7 @@ const CatalogPage: React.FC = () => {
           toast.success("successfully removed tool!");
           queryClient.invalidateQueries(["catalog"]);
         },
-        onError: (error) => { toast.error(`error occurred adding the tool to catalog: ${error}`) }
+        onError: (error) => { toast.error(`error occurred removing the tool from catalog: ${error}`) }
       });
   };
 

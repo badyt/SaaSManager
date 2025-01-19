@@ -6,8 +6,8 @@ import {
     DialogActions,
     Typography,
     Button,
-    DialogContentText,
 } from "@mui/material";
+import ConfirmDeleteDialog from "../../SharedComponents/ConfirmDeleteDialog";
 
 interface ToolDetailsDialogProps {
     open: boolean;
@@ -61,30 +61,11 @@ const ToolDetailsDialog: React.FC<ToolDetailsDialogProps> = ({ open, onClose, to
                     </Button>
                 </DialogActions>
             </Dialog>
-
-
-            <Dialog
-                open={isConfirmOpen}
-                onClose={() => setIsConfirmOpen(false)}
-                maxWidth="xs"
-                fullWidth
-            >
-                <DialogTitle>Confirm Deletion</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to delete the tool <strong>{tool.name}</strong>? This action
-                        cannot be undone.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsConfirmOpen(false)} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleRemove} color="error" variant="contained">
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDeleteDialog
+                isConfirmOpen={isConfirmOpen}
+                setIsConfirmOpen={setIsConfirmOpen}
+                item={tool.name}
+                handleRemove={handleRemove} />
         </>
     );
 };

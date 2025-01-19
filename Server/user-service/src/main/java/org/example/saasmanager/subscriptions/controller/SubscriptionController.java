@@ -52,4 +52,9 @@ public class SubscriptionController implements SubscriptionsApi {
         }
     }
 
+    @Override
+    public ResponseEntity<Void> deleteSubscription (Integer subscriptionId){
+        subscriptionService.deleteSubscription(subscriptionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

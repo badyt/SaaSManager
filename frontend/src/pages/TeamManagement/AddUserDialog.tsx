@@ -42,7 +42,7 @@ const AddUserDialog : React.FC<Props> = ({
     const [searchTerm, setSearchTerm] = useState("");
 
     // Filter users based on the search term
-    const filteredUsers = availableUsers.filter((user) =>
+    const filteredUsers = availableUsers?.filter((user) =>
         user.user_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 

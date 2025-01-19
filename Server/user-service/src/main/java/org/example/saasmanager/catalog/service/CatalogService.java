@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class CatalogService {
@@ -25,8 +27,14 @@ public class CatalogService {
     }
 
     public List<SaaSTool> getAllSaaSTools (){
-        List<CatalogEntity> saaSTools = this.catalogRepository.findAll();
+        List<CatalogEntity> saaSTools = catalogRepository.findAll();
         return catalogEntityMapper.toDtoList(saaSTools);
+    }
+
+    public SaaSTool getToolById(Integer toolId) {
+        CatalogEntity foundTool = catalogRepository.findById(toolId)
+                .orElseThrow(() -> new EntityNotFoundException("Tool not found with ID: " + toolId));
+        return catalogEntityMapper.toDto(foundTool);
     }
 
     public SaaSTool addSaasTool (NewSaaSTool newSaaSTool) {

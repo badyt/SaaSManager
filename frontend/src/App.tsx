@@ -10,6 +10,7 @@ import TeamManagement from './pages/TeamManagement';
 import UserDashboard from './pages/UserDashboard';
 import UserProfile from './pages/UserProfile';
 import Catalog from './pages/Catalog';
+import SubscriptionPage from './pages/SubscriptionPage';
 function App() {
 
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/users" element={<UserDashboard />} />
           <Route path="/profile" element={<UserProfile/>}/>
           <Route path="/catalog" element = {<Catalog/>}/>
+          <Route path="/subscriptions" element = {<SubscriptionPage/>}/>
         </Routes>
       </Router>
     </div>

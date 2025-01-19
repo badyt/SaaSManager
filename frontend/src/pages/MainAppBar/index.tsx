@@ -25,12 +25,12 @@ const MainAppBar: React.FC = () => {
                 <Button color="inherit" onClick={() => navigate("/")}>
                     Home
                 </Button>
-                {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/teams")}>
+                {/* {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/teams")}>
                     Teams
-                </Button>}
-                {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/catalog")}>
+                </Button>} */}
+                {/* {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/catalog")}>
                     Catalog
-                </Button>}
+                </Button>} */}
                 <Button color="inherit" onClick={() => navigate("/profile")}>
                     Profile
                 </Button>

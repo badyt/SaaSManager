@@ -22,6 +22,29 @@ paths:
                   $ref: '#/components/schemas/SaaSTool'
         '500':
           description: Internal server error.
+  /catalog/getTool/{tool_id}:
+    get:
+      summary: Get tool by id
+      description: Retrieves a specific SaaS tool by its id.
+      operationId: getTool
+      tags:
+        - Catalog
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the tool
+      responses:
+        '200':
+          description: A specific tool by its id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaaSTool'
+        '500':
+          description: Internal server error.
   /catalog/addSaaSTool:
     post:
       summary: Add a new SaaS tool

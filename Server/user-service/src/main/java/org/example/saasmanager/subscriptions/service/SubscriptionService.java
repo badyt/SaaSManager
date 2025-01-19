@@ -69,4 +69,11 @@ public class SubscriptionService {
         Subscription savedSubscription = subscriptionsRepository.save(existingSubscription);
         return subscriptionMapper.toDto(savedSubscription);
     }
+
+    public void deleteSubscription(Integer subscriptionId){
+        Subscription foundSubscription = subscriptionsRepository.findById(subscriptionId)
+                .orElseThrow(() -> new IllegalArgumentException("Subscription not found" ));
+        subscriptionsRepository.delete(foundSubscription);
+    }
+
 }
