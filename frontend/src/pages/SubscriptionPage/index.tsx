@@ -12,22 +12,20 @@ import {
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import { useCreateSubscription, useDeleteSubscription, useFetchAllSubscriptions, useUpdateSubscription } from "../../hooks/useSubscription";
+import { useCreateSubscription, useDeleteSubscription, useUpdateSubscription } from "../../hooks/useSubscription";
 import AddSubscriptionDialog from "./AddSubscriptionDialog";
 import { useQueryClient } from "react-query";
 import { useFetchCatalog } from "../../hooks/useCatalog";
 import EditSubscriptionDialog from "./EditSubscriptionDialog";
 import ConfirmDeleteDialog from "../../SharedComponents/ConfirmDeleteDialog";
+import { useEnrichedSubscriptions } from "../../hooks/useEnrichedSubscriptions";
 
 
-interface SubscriptionEntity {
-    subscription: Subscription,
-    tool: CatalogTool
-}
 
 const SubscriptionPage: React.FC = () => {
-    const { data: subscriptions } = useFetchAllSubscriptions();
+    // const { data: subscriptions } = useFetchAllSubscriptions();
     const { data: catalog } = useFetchCatalog();
+    const { enrichedSubscriptions, subscriptionQuery, catalogQuery } = useEnrichedSubscriptions();
     const [searchQuery, setSearchQuery] = useState("");
     const queryClient = useQueryClient();
     const addSubscriptionMutation = useCreateSubscription();
@@ -35,7 +33,7 @@ const SubscriptionPage: React.FC = () => {
     const updateSubscriptionMutation = useUpdateSubscription();
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionEntity | null>(null);
+    const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionEnrichedEntity | null>(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
     const handleAddSubscription = (subscription: { tool_id: number; renewal_date: string; cost: number, license_count: number }) => {
@@ -87,14 +85,6 @@ const SubscriptionPage: React.FC = () => {
         });
     };
 
-    const enrichedSubscriptions: SubscriptionEntity[] | undefined = subscriptions?.map((subscription: Subscription) => {
-        const tool = catalog?.find((tool: CatalogTool) => tool.tool_id === subscription.tool_id);
-        return {
-            subscription,
-            tool: tool
-        };
-    });
-
     const filteredSubscriptions = enrichedSubscriptions?.filter((item) =>
         item.tool.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -124,7 +114,7 @@ const SubscriptionPage: React.FC = () => {
             </Box>
 
             <Grid2 container spacing={2}>
-                {filteredSubscriptions?.map((item: SubscriptionEntity) => (
+                {filteredSubscriptions?.map((item: SubscriptionEnrichedEntity) => (
                     <Grid2
                         key={item.subscription.subscription_id}
                         sx={{

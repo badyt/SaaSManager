@@ -48,11 +48,15 @@ const CatalogPage: React.FC = () => {
   const handleRemoveTool = (toolId: number) => {
     removeToolMutation.mutate(toolId
       , {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success("successfully removed tool!");
           queryClient.invalidateQueries(["catalog"]);
+          queryClient.invalidateQueries(["subscriptions"]);
+          await queryClient.refetchQueries(["subscriptions"]);
         },
-        onError: (error) => { toast.error(`error occurred removing the tool from catalog: ${error}`) }
+        onError: (error) => { toast.error(`error occurred removing the tool from catalog: ${error}`) },
+        onSettled: () => {
+      }
       });
   };
 

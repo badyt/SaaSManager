@@ -11,6 +11,7 @@ import UserDashboard from './pages/UserDashboard';
 import UserProfile from './pages/UserProfile';
 import Catalog from './pages/Catalog';
 import SubscriptionPage from './pages/SubscriptionPage';
+import LicensePage from './pages/LicensePage';
 function App() {
 
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/profile" element={<UserProfile/>}/>
           <Route path="/catalog" element = {<Catalog/>}/>
           <Route path="/subscriptions" element = {<SubscriptionPage/>}/>
+          <Route path="/licenses" element = {<LicensePage/>}/>
         </Routes>
       </Router>
     </div>

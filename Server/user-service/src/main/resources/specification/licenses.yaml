@@ -4,6 +4,25 @@ info:
   version: 1.0.0
   description: API for managing SaaS licenses.
 paths:
+  /licenses/getAllLicenses:
+    get:
+      summary: Get all licenses
+      description: Retrieves a list of all licenses.
+      operationId: getAllLicenses
+      tags:
+        - Licenses
+      responses:
+        '200':
+          description: A list of licenses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LicenseDTO'
+        '500':
+          description: Internal server error.
+
   /licenses/allocateLicense:
     post:
       summary: Allocate a license to a user

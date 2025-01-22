@@ -24,6 +24,7 @@ public interface SubscriptionMapper {
     @Mapping(source = "cost", target = "cost", qualifiedByName = "floatToBigDecimal")
     @Mapping(source = "renewalDate", target = "renewalDate")
     @Mapping(source = "licenseCount",target = "licenseCount")
+    @Mapping(source = "allocatedLicenses",target = "allocatedLicenses")
     Subscription toEntity(SubscriptionDTO subscriptionDTO, @Context CatalogRepository catalogRepository);
 
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "localDateTimeToOffsetDateTime")
@@ -31,6 +32,7 @@ public interface SubscriptionMapper {
     @Mapping(source = "cost", target = "cost", qualifiedByName = "bigDecimalToFloat")
     @Mapping(source = "renewalDate", target = "renewalDate")
     @Mapping(source = "licenseCount",target = "licenseCount")
+    @Mapping(source = "allocatedLicenses",target = "allocatedLicenses")
     SubscriptionDTO toDto(Subscription subscription);
 
     List<SubscriptionDTO> toDtoList (List<Subscription> subscriptions);

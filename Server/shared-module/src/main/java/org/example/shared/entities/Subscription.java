@@ -39,4 +39,8 @@ public class Subscription {
 
     @Column(name = "license_count", nullable = false)
     private Integer licenseCount;
+
+    @Column(name = "allocated_licenses", nullable = false)
+    @Builder.Default
+    private Integer allocatedLicenses = 0;
 }

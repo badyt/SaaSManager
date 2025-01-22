@@ -199,3 +199,6 @@ components:
         license_count:
           type: integer
           description: Total licenses number that can be allocated
+        allocated_licenses:
+          type: integer
+          description: Total allocated licenses for user.

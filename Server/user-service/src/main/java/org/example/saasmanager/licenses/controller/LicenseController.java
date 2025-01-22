@@ -21,6 +21,11 @@ public class LicenseController implements LicensesApi {
     }
 
     @Override
+    public ResponseEntity<List<LicenseDTO>> getAllLicenses() {
+        List<LicenseDTO> licenses = licenseService.getAllLicenses();
+        return ResponseEntity.ok(licenses);
+    }
+    @Override
     public ResponseEntity<LicenseDTO> allocateLicense(NewLicense newLicense){
         LicenseDTO allocatedLicense = licenseService.allocateLicense(newLicense);
         return new ResponseEntity<>(allocatedLicense, HttpStatus.CREATED);

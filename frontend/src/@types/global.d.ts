@@ -25,6 +25,20 @@ declare global {
         cost: number;
         created_at: string;
         license_count: number;
+        allocated_licenses: number;
+    }
+
+    interface SubscriptionEnrichedEntity {
+        subscription: Subscription;
+        tool: CatalogTool;
+    }
+
+    interface License {
+        license_id: number;
+        subscription_id: number;
+        user_id: number;
+        allocated_at: string;
+        last_used_at: string;
     }
 }
 export { }
