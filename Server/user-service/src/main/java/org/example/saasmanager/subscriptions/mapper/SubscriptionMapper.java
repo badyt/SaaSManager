@@ -1,6 +1,7 @@
 package org.example.saasmanager.subscriptions.mapper;
 
 import com.example.subscriptions.model.SubscriptionDTO;
+import com.example.subscriptions.model.SubscriptionDTOTool;
 import org.example.saasmanager.catalog.repository.CatalogRepository;
 import org.example.shared.entities.CatalogEntity;
 import org.example.shared.entities.Subscription;
@@ -20,22 +21,22 @@ import java.util.Optional;
 public interface SubscriptionMapper {
 
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "offsetDateTimeToLocalDateTime")
-    @Mapping(source = "toolId", target = "tool", qualifiedByName = "toolIdToTool")
+    @Mapping(source = "tool", target = "tool", qualifiedByName = "mapToolDTOToEntity")
     @Mapping(source = "cost", target = "cost", qualifiedByName = "floatToBigDecimal")
     @Mapping(source = "renewalDate", target = "renewalDate")
-    @Mapping(source = "licenseCount",target = "licenseCount")
-    @Mapping(source = "allocatedLicenses",target = "allocatedLicenses")
+    @Mapping(source = "licenseCount", target = "licenseCount")
+    @Mapping(source = "allocatedLicenses", target = "allocatedLicenses")
     Subscription toEntity(SubscriptionDTO subscriptionDTO, @Context CatalogRepository catalogRepository);
 
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "localDateTimeToOffsetDateTime")
-    @Mapping(source = "tool", target = "toolId", qualifiedByName = "toolToToolId")
+    @Mapping(source = "tool", target = "tool", qualifiedByName = "mapToolEntityToDTO")
     @Mapping(source = "cost", target = "cost", qualifiedByName = "bigDecimalToFloat")
     @Mapping(source = "renewalDate", target = "renewalDate")
-    @Mapping(source = "licenseCount",target = "licenseCount")
-    @Mapping(source = "allocatedLicenses",target = "allocatedLicenses")
+    @Mapping(source = "licenseCount", target = "licenseCount")
+    @Mapping(source = "allocatedLicenses", target = "allocatedLicenses")
     SubscriptionDTO toDto(Subscription subscription);
 
-    List<SubscriptionDTO> toDtoList (List<Subscription> subscriptions);
+    List<SubscriptionDTO> toDtoList(List<Subscription> subscriptions);
 
     // Custom mapping method for LocalDateTime -> OffsetDateTime
     @Named("localDateTimeToOffsetDateTime")
@@ -63,6 +64,30 @@ public interface SubscriptionMapper {
         }
         Optional<CatalogEntity> tool = catalogRepository.findById(toolId);
         return tool.orElse(null);
+    }
+
+    // Convert Tool Entity to DTO with Date Mapping
+    @Named("mapToolEntityToDTO")
+    default SubscriptionDTOTool mapToolEntityToDTO(CatalogEntity tool) {
+        if (tool == null) return null;
+        return new SubscriptionDTOTool().toolId(tool.getToolId())
+                .name(tool.getName())
+                .description(tool.getDescription())
+                .defaultCost(tool.getDefaultCost())
+                .createdAt(tool.getCreatedAt().atOffset(ZoneOffset.UTC));
+    }
+
+    // Convert Tool DTO to Entity with Date Mapping
+    @Named("mapToolDTOToEntity")
+    default CatalogEntity mapToolDTOToEntity(SubscriptionDTOTool toolDTO) {
+        if (toolDTO == null) return null;
+        return new CatalogEntity(
+                toolDTO.getToolId(),
+                toolDTO.getName(),
+                toolDTO.getDescription(),
+                (toolDTO.getDefaultCost()),
+                toolDTO.getCreatedAt().toLocalDateTime() // Convert OffsetDateTime to LocalDateTime
+        );
     }
 
     // Custom conversion from Float to BigDecimal

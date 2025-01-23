@@ -155,10 +155,16 @@ components:
           type: integer
           description: The ID of the associated subscription.
           example: 10
+        tool_name:
+          type: string
+          description: The tool name of the subscription.
         user_id:
           type: integer
           description: The ID of the user to whom the license is allocated.
           example: 101
+        user_name:
+          type: string
+          description: The name of the user to whom the license is allocated.
         allocated_at:
           type: string
           format: date-time

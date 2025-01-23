@@ -12,20 +12,19 @@ import {
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import { useCreateSubscription, useDeleteSubscription, useUpdateSubscription } from "../../hooks/useSubscription";
+import { useCreateSubscription, useDeleteSubscription, useFetchAllSubscriptions, useUpdateSubscription } from "../../hooks/useSubscription";
 import AddSubscriptionDialog from "./AddSubscriptionDialog";
 import { useQueryClient } from "react-query";
 import { useFetchCatalog } from "../../hooks/useCatalog";
 import EditSubscriptionDialog from "./EditSubscriptionDialog";
 import ConfirmDeleteDialog from "../../SharedComponents/ConfirmDeleteDialog";
-import { useEnrichedSubscriptions } from "../../hooks/useEnrichedSubscriptions";
 
 
 
 const SubscriptionPage: React.FC = () => {
     // const { data: subscriptions } = useFetchAllSubscriptions();
     const { data: catalog } = useFetchCatalog();
-    const { enrichedSubscriptions, subscriptionQuery, catalogQuery } = useEnrichedSubscriptions();
+    const { data: subscriptions } = useFetchAllSubscriptions();
     const [searchQuery, setSearchQuery] = useState("");
     const queryClient = useQueryClient();
     const addSubscriptionMutation = useCreateSubscription();
@@ -33,7 +32,7 @@ const SubscriptionPage: React.FC = () => {
     const updateSubscriptionMutation = useUpdateSubscription();
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionEnrichedEntity | null>(null);
+    const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
     const handleAddSubscription = (subscription: { tool_id: number; renewal_date: string; cost: number, license_count: number }) => {
@@ -85,7 +84,7 @@ const SubscriptionPage: React.FC = () => {
         });
     };
 
-    const filteredSubscriptions = enrichedSubscriptions?.filter((item) =>
+    const filteredSubscriptions = subscriptions?.filter((item: Subscription) =>
         item.tool.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -114,9 +113,9 @@ const SubscriptionPage: React.FC = () => {
             </Box>
 
             <Grid2 container spacing={2}>
-                {filteredSubscriptions?.map((item: SubscriptionEnrichedEntity) => (
+                {filteredSubscriptions?.map((item: Subscription) => (
                     <Grid2
-                        key={item.subscription.subscription_id}
+                        key={item.subscription_id}
                         sx={{
                             width: {
                                 xs: "100%",  // Full width on extra-small screens
@@ -131,10 +130,10 @@ const SubscriptionPage: React.FC = () => {
                             <CardContent>
                                 <Typography variant="h6">{item.tool.name}</Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Renewal Date: {new Date(item.subscription.renewal_date).toLocaleDateString()}
+                                    Renewal Date: {new Date(item.renewal_date).toLocaleDateString()}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Cost: ${item.subscription.cost.toFixed(2)}
+                                    Cost: ${item.cost.toFixed(2)}
                                 </Typography>
                                 {/* <Typography variant="body2" color="text.secondary">
                                     Assigned Users: {item.assignedUsers}
@@ -179,7 +178,7 @@ const SubscriptionPage: React.FC = () => {
                     open={isEditDialogOpen}
                     onClose={() => setIsEditDialogOpen(false)}
                     onUpdateSubscription={handleUpdateSubscription}
-                    subscriptionEntity={selectedSubscription}
+                    subscription={selectedSubscription}
                 />
             )}
 
@@ -188,7 +187,7 @@ const SubscriptionPage: React.FC = () => {
                 isConfirmOpen={isConfirmDialogOpen}
                 setIsConfirmOpen={setIsConfirmDialogOpen}
                 item={`Subscription of ${selectedSubscription?.tool.name}`}
-                handleRemove={() => handleDeleteSubscription(selectedSubscription?.subscription.subscription_id)} />
+                handleRemove={() => handleDeleteSubscription(selectedSubscription?.subscription_id)} />
         </Box>
     );
 };

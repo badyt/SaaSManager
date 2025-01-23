@@ -36,4 +36,5 @@ public class License {
     @Column(name = "last_used_at")
     @Builder.Default
     private LocalDateTime lastUsedAt = LocalDateTime.now();;
+
 }

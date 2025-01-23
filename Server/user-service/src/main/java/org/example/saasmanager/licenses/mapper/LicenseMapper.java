@@ -22,6 +22,8 @@ public interface LicenseMapper {
 
     @Mapping(source = "subscription", target = "subscriptionId", qualifiedByName = "subscriptionToSubscriptionId")
     @Mapping(source = "user", target = "userId", qualifiedByName = "userToUserId")
+    @Mapping(source = "user", target = "userName", qualifiedByName = "userToUserName")
+    @Mapping(source = "subscription", target = "toolName", qualifiedByName = "subscriptionToToolName")
     @Mapping(source = "allocatedAt", target = "allocatedAt", qualifiedByName = "localDateTimeToOffsetDateTime")
     @Mapping(source = "lastUsedAt", target = "lastUsedAt", qualifiedByName = "localDateTimeToOffsetDateTime")
     LicenseDTO toDto(License license);
@@ -50,7 +52,7 @@ public interface LicenseMapper {
         return subscription != null ? subscription.getSubscriptionId() : null;
     }
 
-    // Custom mapping method for Integer (subscription ID) -> subscription
+    // Custom mapping method for Integer (user ID) -> user
     @Named("userIdToUser")
     default User userIdToUser(Integer userId, @Context UserRepository userRepository) {
         if (userId == null) {
@@ -60,10 +62,23 @@ public interface LicenseMapper {
         return user.orElse(null);
     }
 
-    // Custom mapping method for subscription -> subscriptionId
+    // Custom mapping method for user -> userId
     @Named("userToUserId")
     default Integer userToUserId(User user) {
         return user != null ? user.getUserId() : null;
+    }
+
+    // Custom mapping method for user -> userName
+    @Named("userToUserName")
+    default  String userToUserName(User user) {
+        return user != null ? user.getName() : null;
+    }
+
+
+    // Custom mapping method for user -> userName
+    @Named("subscriptionToToolName")
+    default  String subscriptionToToolName(Subscription subscription) {
+        return subscription != null ? subscription.getTool().getName() : null;
     }
 
     // Custom mapping method for LocalDateTime -> OffsetDateTime

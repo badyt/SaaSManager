@@ -177,10 +177,30 @@ components:
           type: integer
           description: Unique identifier for the subscription.
           example: 10
-        tool_id:
-          type: integer
-          description: ID of the associated SaaS tool.
-          example: 1
+        tool:
+          type: object
+          properties:
+            tool_id:
+              type: integer
+              description: Unique identifier for the SaaS tool.
+              example: 1
+            name:
+              type: string
+              description: Name of the SaaS tool.
+              example: "Google Workspace"
+            description:
+              type: string
+              description: Description of the SaaS tool.
+              example: "A set of productivity tools by Google."
+            default_cost:
+              type: number
+              description: Default cost of the SaaS tool.
+              example: 99.99
+            created_at:
+              type: string
+              format: date-time
+              description: The timestamp when the SaaS tool was added.
+              example: "2025-01-01T12:00:00Z"
         renewal_date:
           type: string
           format: date

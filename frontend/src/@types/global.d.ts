@@ -20,7 +20,7 @@ declare global {
 
     interface Subscription {
         subscription_id: number;
-        tool_id: number;
+        tool: CatalogTool;
         renewal_date: string;
         cost: number;
         created_at: string;
@@ -28,15 +28,12 @@ declare global {
         allocated_licenses: number;
     }
 
-    interface SubscriptionEnrichedEntity {
-        subscription: Subscription;
-        tool: CatalogTool;
-    }
-
     interface License {
         license_id: number;
         subscription_id: number;
         user_id: number;
+        user_name: string;
+        tool_name: string;
         allocated_at: string;
         last_used_at: string;
     }

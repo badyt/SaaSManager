@@ -14,14 +14,10 @@ interface EditSubscriptionDialogProps {
     open: boolean;
     onClose: () => void;
     onUpdateSubscription: (updatedSubscription: { subscription_id: number; renewal_date: string; cost: number; license_count: number }) => void;
-    subscriptionEntity: {
-        subscription: Subscription;
-        tool: CatalogTool;
-    };
+    subscription: Subscription;
 }
 
-const EditSubscriptionDialog: React.FC<EditSubscriptionDialogProps> = ({ open, onClose, onUpdateSubscription, subscriptionEntity }) => {
-    const { subscription, tool } = subscriptionEntity;
+const EditSubscriptionDialog: React.FC<EditSubscriptionDialogProps> = ({ open, onClose, onUpdateSubscription, subscription }) => {
     const [licenseCount, setLicenseCount] = useState<number>(subscription.license_count);
     const [totalCost, setTotalCost] = useState<number>(subscription.cost);
     const [renewalDate, setRenewalDate] = useState<string>(subscription.renewal_date);
@@ -29,8 +25,8 @@ const EditSubscriptionDialog: React.FC<EditSubscriptionDialogProps> = ({ open, o
 
     // Update total cost when license count changes
     useEffect(() => {
-        setTotalCost(tool.default_cost * licenseCount);
-    }, [licenseCount, tool.default_cost]);
+        setTotalCost(subscription.tool.default_cost * licenseCount);
+    }, [licenseCount, subscription.tool.default_cost]);
 
     const handleLicenseChange = (newCount: number) => {
         setLicenseCount(newCount);
@@ -67,7 +63,7 @@ const EditSubscriptionDialog: React.FC<EditSubscriptionDialogProps> = ({ open, o
             <DialogTitle>Edit Subscription</DialogTitle>
             <DialogContent>
                 <Typography variant="h6" gutterBottom>
-                    Tool: {tool.name}
+                    Tool: {subscription.tool.name}
                 </Typography>
 
                 <TextField
