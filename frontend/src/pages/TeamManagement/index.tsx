@@ -26,8 +26,6 @@ const TeamManagement: React.FC = () => {
     const { data: teams } = useFetchAllTeamsWithUsers();
     const { data: users } = useUsers();
 
-    console.log("User : " + users);
-
     const queryClient = useQueryClient();
     const createTeamMutation = useCreateTeam();
     const addUserMutation = useAddUserToTeam();

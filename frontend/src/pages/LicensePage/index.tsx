@@ -6,28 +6,19 @@ import {
     Button,
     Select,
     MenuItem,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
     Grid2,
     Divider
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { toast } from "react-toastify";
-// import { useFetchCatalog } from "../../hooks/useCatalog";
 import { useFetchAllSubscriptions } from "../../hooks/useSubscription";
 import { useUsers } from "../../hooks/useUsers";
 import { useAllocateLicense, useFetchLicenses } from "../../hooks/useLicense";
 import { useQueryClient } from "react-query";
 import { AxiosError } from "axios";
+import SelectUserDialog from "./SelectUserDialog";
 
 const LicensePage: React.FC = () => {
-    // const { data: catalog } = useFetchCatalog();
     const { data: subscriptions } = useFetchAllSubscriptions();
     const { data: users } = useUsers(); // Fetch users to select from dialog
     const { data: licenses } = useFetchLicenses();
@@ -70,7 +61,6 @@ const LicensePage: React.FC = () => {
             }
         );
     };
-
 
     return (
         <Box sx={{ padding: "2rem" }}>
@@ -208,27 +198,9 @@ const LicensePage: React.FC = () => {
             </Card>
 
             {/* User Selection Dialog */}
-            <Dialog open={isUserDialogOpen} onClose={() => setIsUserDialogOpen(false)} maxWidth="sm" fullWidth>
-                <DialogTitle>Select a User</DialogTitle>
-                <DialogContent>
-                    <List>
-                        {users?.map((user: UserDTO) => (
-                            <ListItem key={user.userId} disablePadding>
-                                <ListItemButton onClick={() => { setSelectedUser(user); setIsUserDialogOpen(false); }}>
-                                    <ListItemText primary={user.name} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsUserDialogOpen(false)} color="secondary">
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <SelectUserDialog isUserDialogOpen={isUserDialogOpen} users={users} setIsUserDialogOpen={setIsUserDialogOpen}
+                setSelectedUser={setSelectedUser} />
         </Box>
-
     );
 };
 

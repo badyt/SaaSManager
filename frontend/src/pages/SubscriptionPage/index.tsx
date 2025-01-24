@@ -18,6 +18,10 @@ import { useQueryClient } from "react-query";
 import { useFetchCatalog } from "../../hooks/useCatalog";
 import EditSubscriptionDialog from "./EditSubscriptionDialog";
 import ConfirmDeleteDialog from "../../SharedComponents/ConfirmDeleteDialog";
+import { AxiosError } from "axios";
+import AssignedUsersDialog from "./AssignedUsersDialog";
+import { useRemoveLicense } from "../../hooks/useLicense";
+import { fetchLicensesBySubscription } from "../../api/licenseApi";
 
 
 
@@ -28,12 +32,18 @@ const SubscriptionPage: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const queryClient = useQueryClient();
     const addSubscriptionMutation = useCreateSubscription();
+    const RemoveLicenseMutation = useRemoveLicense();
     const removeSubscriptionMutation = useDeleteSubscription();
     const updateSubscriptionMutation = useUpdateSubscription();
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isViewUsersOpen, setIsViewUsersOpen] = useState(false);
+
     const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
+    const [licensesForSubscription, setLicensesForSubscription] = useState<License[] | null>(null);
+
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
 
     const handleAddSubscription = (subscription: { tool_id: number; renewal_date: string; cost: number, license_count: number }) => {
         addSubscriptionMutation.mutate(subscription
@@ -46,6 +56,15 @@ const SubscriptionPage: React.FC = () => {
             });
     };
 
+    const getUsersForSubscription = async (subscriptionId: number) => {
+        try {
+            const licensesBySubscription = await fetchLicensesBySubscription(subscriptionId);
+            setLicensesForSubscription(licensesBySubscription);
+        } catch (error) {
+            const errorMessage = (error instanceof AxiosError) ? error.response?.data : error;
+            toast.error(`${errorMessage}`);
+        }
+    }
     const handleDeleteSubscription = (subscriptionId: number | undefined) => {
         if (subscriptionId)
             removeSubscriptionMutation.mutate(subscriptionId
@@ -66,6 +85,28 @@ const SubscriptionPage: React.FC = () => {
         else
             toast.error("couldnt read properly the subscription id to delete!")
     };
+    const handleViewUsers = (subscription: Subscription) => {
+        getUsersForSubscription(subscription.subscription_id).then((value) => {
+            setSelectedSubscription(subscription)
+            setIsViewUsersOpen(true)
+        }).catch((error) => { toast.error("something went wrong getting users for subscription!") })
+
+    };
+
+    const handleRemoveUser = (license_id: number | undefined) => {
+        if (!license_id)
+            return toast.error("license id to remove is missing!");
+        RemoveLicenseMutation.mutate(license_id
+            , {
+                onSuccess: async () => {
+                    toast.success("successfully deleted license!");
+                    queryClient.invalidateQueries(["subscriptions"]);
+                    queryClient.invalidateQueries(["licenses"]);
+                },
+                onError: (error) => { toast.error(`error occurred deleting license: ${error}`) }
+            });
+
+    }
 
     const handleUpdateSubscription = (updatedSubscription: {
         subscription_id: number;
@@ -158,6 +199,15 @@ const SubscriptionPage: React.FC = () => {
                                 >
                                     <Delete />
                                 </IconButton>
+
+                                <Button
+                                    sx={{ marginLeft: "auto !important" }}
+                                    size="small"
+                                    onClick={() => handleViewUsers(item)}
+                                >
+                                    View Assigned Users
+                                </Button>
+
                             </CardActions>
                         </Card>
                     </Grid2>
@@ -182,12 +232,29 @@ const SubscriptionPage: React.FC = () => {
                 />
             )}
 
-            {/* Confirmation Dialog */}
+            <AssignedUsersDialog
+                isOpen={isViewUsersOpen}
+                onClose={() => {
+                    setIsViewUsersOpen(false); setLicensesForSubscription(null);
+                    setSelectedSubscription(null);
+                }}
+                onRemoveUser={(licenseId: number | undefined) => {
+                    handleRemoveUser(licenseId);
+                    setIsViewUsersOpen(false);
+                    setLicensesForSubscription(null);
+                    setSelectedSubscription(null);
+                }}
+                licenses={licensesForSubscription}
+                subscription={selectedSubscription}
+            />
+
+            {/* Confirmation Dialog for subscription*/}
             <ConfirmDeleteDialog
                 isConfirmOpen={isConfirmDialogOpen}
                 setIsConfirmOpen={setIsConfirmDialogOpen}
                 item={`Subscription of ${selectedSubscription?.tool.name}`}
                 handleRemove={() => handleDeleteSubscription(selectedSubscription?.subscription_id)} />
+
         </Box>
     );
 };

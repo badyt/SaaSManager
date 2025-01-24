@@ -49,8 +49,6 @@ const TeamList: React.FC<TeamListProps> = ({ teams, onAddUser, onRemoveUser, ava
 
     const handleUserSelect = (teamId: number, userId: number) => {
         setSelectedUser({ [teamId]: userId });
-        console.log(selectedUser);
-
     };
 
     const handleAddUser = (teamId: number) => {
