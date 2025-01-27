@@ -1,4 +1,4 @@
-package org.example.saasmanager.config;
+package org.example.saasmanager.config.exception_handling;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

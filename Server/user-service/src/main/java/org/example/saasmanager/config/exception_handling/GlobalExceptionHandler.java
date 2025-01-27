@@ -1,4 +1,4 @@
-package org.example.saasmanager.config;
+package org.example.saasmanager.config.exception_handling;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataIntegrityViolationException;

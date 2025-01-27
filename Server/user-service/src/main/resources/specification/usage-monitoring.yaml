@@ -1,113 +1,171 @@
 openapi: 3.0.3
 info:
-  title: Usage Monitoring API
+  title: SaaSManager Usage Monitoring API
   version: 1.0.0
-  description: API for monitoring SaaS usage and detecting inefficiencies.
+  description: API for tracking and analyzing user activity logs in SaaSManager.
 paths:
-  /usage/logs:
+  /usage/getLogs:
     get:
       summary: Fetch usage logs
-      description: Retrieves usage logs for analysis of user activities and tool usage.
-      operationId: getUsageLogs
+      description: Retrieves usage logs for analysis, with optional filters for user, tool, and date range.
+      operationId: getLogs
       tags:
-        - Usage Monitoring
+        - Usage
       parameters:
-        - name: start_date
+        - name: userId
           in: query
-          required: false
+          description: Filter logs by user ID
+          schema:
+            type: integer
+        - name: toolId
+          in: query
+          description: Filter logs by tool ID
+          schema:
+            type: integer
+        - name: startDate
+          in: query
+          description: Filter logs from this date (inclusive)
           schema:
             type: string
-            format: date
-          description: Start date for filtering logs (optional).
-        - name: end_date
+            format: date-time
+        - name: endDate
           in: query
-          required: false
+          description: Filter logs until this date (inclusive)
           schema:
             type: string
-            format: date
-          description: End date for filtering logs (optional).
+            format: date-time
+        - name: activityType
+          in: query
+          description: Filter logs by activity type
+          schema:
+            type: string
       responses:
-        '200':
-          description: A list of usage logs.
+        "200":
+          description: Successfully retrieved usage logs
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UsageLog'
-        '400':
-          description: Bad request. Invalid query parameters.
-        '500':
+                  $ref: "#/components/schemas/UsageLogDTO"
+        "400":
+          description: Invalid query parameters
+        "500":
+          description: Internal server error
+
+  /usage/logUser:
+    post:
+      summary: Log user interaction
+      description: Records user interactions with a subscription.
+      operationId: logUserInteraction
+      tags:
+        - Usage
+      requestBody:
+        description: Log entry containing interaction details.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsageLogRequest"
+      responses:
+        "201":
+          description: Successfully logged the interaction.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageLogDTO"
+        "400":
+          description: Invalid request body.
+        "500":
           description: Internal server error.
 
-  /usage/underutilized:
+  /usage/getUnderutilized:
     get:
-      summary: Detect underutilized subscriptions
-      description: Identifies underutilized or unused subscriptions based on user activity data.
-      operationId: detectUnderutilizedSubs
+      summary: Get underutilized subscriptions
+      description: Detect underutilized or unused subscriptions based on activity data.
+      operationId: getUnderutilized
       tags:
-        - Usage Monitoring
+        - Usage
+      parameters:
+        - name: threshold
+          in: query
+          description: Minimum number of activities required to consider a subscription utilized
+          schema:
+            type: integer
+            default: 5
+        - name: period
+          in: query
+          description: Time period to analyze (e.g., last 30 days)
+          schema:
+            type: string
+            example: "30d"
       responses:
-        '200':
-          description: A list of underutilized subscriptions.
+        "200":
+          description: List of underutilized subscriptions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UnderutilizedSubscription'
-        '500':
-          description: Internal server error.
+                  $ref: "#/components/schemas/UnderutilizedSubscription"
+        "400":
+          description: Invalid query parameters
+        "500":
+          description: Internal server error
 
 components:
   schemas:
-    UsageLog:
+    UsageLogDTO:
       type: object
       properties:
-        log_id:
+        logId:
           type: integer
-          description: Unique identifier for the usage log.
-          example: 1001
-        user_id:
+          example: 5
+        userId:
           type: integer
-          description: The ID of the user associated with the activity.
-          example: 101
-        tool_id:
+          example: 123
+        subscriptionId:
           type: integer
-          description: The ID of the SaaS tool being used.
-          example: 10
-        activity_date:
+          example: 2
+        activityDate:
           type: string
           format: date-time
-          description: Timestamp of the activity.
-          example: "2025-01-01T12:00:00Z"
-        activity_type:
+          example: "2024-01-01T12:00:00Z"
+        activityType:
           type: string
-          description: Type of activity performed.
-          example: "Login"
+          example: "login"
 
     UnderutilizedSubscription:
       type: object
       properties:
-        subscription_id:
+        subscriptionId:
           type: integer
-          description: Unique identifier for the subscription.
-          example: 10
-        tool_name:
-          type: string
-          description: Name of the SaaS tool associated with the subscription.
-          example: "Google Workspace"
-        user_count:
+        userId:
           type: integer
-          description: Number of users assigned to the subscription.
-          example: 5
-        last_active_date:
+        userName:
           type: string
-          format: date
-          description: Date when the subscription was last actively used.
-          example: "2024-12-15"
-        underutilization_score:
-          type: number
-          format: float
-          description: Score indicating the level of underutilization (e.g., 0 to 1 scale).
-          example: 0.8
+        toolName:
+          type: string
+        activityCount:
+          type: integer
+          example: 2
+
+    UsageLogRequest:
+      type: object
+      required:
+        - userId
+        - subscriptionId
+        - activityType
+      properties:
+        userId:
+          type: integer
+          description: The ID of the user performing the interaction.
+          example: 123
+        subscriptionId:
+          type: integer
+          description: The ID of the subscription being used.
+          example: 456
+        activityType:
+          type: string
+          description: The type of activity performed (e.g., 'login', 'view', 'download').
+          example: "login"

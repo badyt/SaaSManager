@@ -8,8 +8,10 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +36,11 @@ public class JwtService {
         return extractClaim(token, claims -> claims.get("userId", String.class));
     }
 
+    @SuppressWarnings("unchecked")
+    public List<String> extractRoles(String token) {
+        return extractClaim(token, claims -> (List<String>) claims.get("roles"));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -43,6 +50,10 @@ public class JwtService {
     public String generateToken(UserDetails userDetails, Integer userId) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("userId", String.valueOf(userId)); // Add userId as a custom claim
+        extraClaims.put("roles", userDetails.getAuthorities()
+                .stream()
+                .map(Object::toString)  // Convert roles to String
+                .collect(Collectors.toList()));  // Store roles as a list in JWT
         return generateToken(extraClaims, userDetails);
     }
 

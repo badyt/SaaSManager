@@ -1,4 +1,4 @@
-package org.example.saasmanager.config;
+package org.example.saasmanager.config.validations;
 
 
 import org.example.saasmanager.licenses.repository.LicenseRepository;
