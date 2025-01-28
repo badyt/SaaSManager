@@ -21,7 +21,7 @@ import ConfirmDeleteDialog from "../../SharedComponents/ConfirmDeleteDialog";
 interface AssignedUsersDialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onRemoveUser: (licenseId: number | undefined) => void;
+    onRemoveUser: (licenseId?: number) => void;
     licenses: License[] | null;
     subscription: Subscription | null;
 }

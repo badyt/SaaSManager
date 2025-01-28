@@ -7,6 +7,7 @@ import org.example.saasmanager.licenses.service.LicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class LicenseController implements LicensesApi {
         List<LicenseDTO> licenses = licenseService.getAllLicenses();
         return ResponseEntity.ok(licenses);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<LicenseDTO> allocateLicense(NewLicense newLicense){
         LicenseDTO allocatedLicense = licenseService.allocateLicense(newLicense);
@@ -37,6 +40,7 @@ public class LicenseController implements LicensesApi {
         return new ResponseEntity<>(foundLicenses,HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Void> revokeLicense(Integer licenseId){
         licenseService.revokeLicense(licenseId);

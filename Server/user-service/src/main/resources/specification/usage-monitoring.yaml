@@ -121,12 +121,12 @@ components:
         logId:
           type: integer
           example: 5
-        userId:
+        licenseId:
           type: integer
-          example: 123
-        subscriptionId:
-          type: integer
-          example: 2
+        userName:
+          type: string
+        toolName:
+          type: string
         activityDate:
           type: string
           format: date-time
@@ -138,9 +138,7 @@ components:
     UnderutilizedSubscription:
       type: object
       properties:
-        subscriptionId:
-          type: integer
-        userId:
+        licenseId:
           type: integer
         userName:
           type: string
@@ -153,18 +151,11 @@ components:
     UsageLogRequest:
       type: object
       required:
-        - userId
-        - subscriptionId
+        - licenseId
         - activityType
       properties:
-        userId:
+        licenseId:
           type: integer
-          description: The ID of the user performing the interaction.
-          example: 123
-        subscriptionId:
-          type: integer
-          description: The ID of the subscription being used.
-          example: 456
         activityType:
           type: string
           description: The type of activity performed (e.g., 'login', 'view', 'download').

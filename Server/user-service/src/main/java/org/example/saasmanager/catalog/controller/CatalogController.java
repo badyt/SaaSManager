@@ -8,6 +8,7 @@ import org.example.saasmanager.catalog.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public class CatalogController implements CatalogApi {
         this.catalogService = catalogService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public ResponseEntity<SaaSTool> addSaaSTool(NewSaaSTool newSaaSTool){
+    public ResponseEntity<SaaSTool> addSaaSTool(NewSaaSTool newSaaSTool) {
         SaaSTool createdSaasTool = catalogService.addSaasTool(newSaaSTool);
         return new ResponseEntity<>(createdSaasTool, HttpStatus.CREATED);
     }
@@ -30,15 +32,16 @@ public class CatalogController implements CatalogApi {
     @Override
     public ResponseEntity<List<SaaSTool>> getCatalog() {
         List<SaaSTool> saaSTools = catalogService.getAllSaaSTools();
-        return new ResponseEntity<>(saaSTools,HttpStatus.OK);
+        return new ResponseEntity<>(saaSTools, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<SaaSTool> getTool(Integer toolId){
+    public ResponseEntity<SaaSTool> getTool(Integer toolId) {
         SaaSTool tool = catalogService.getToolById(toolId);
-        return new ResponseEntity<>(tool,HttpStatus.OK);
+        return new ResponseEntity<>(tool, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Void> removeTool(Integer toolId) {
         try {

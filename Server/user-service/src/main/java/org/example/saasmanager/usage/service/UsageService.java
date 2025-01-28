@@ -3,10 +3,12 @@ package org.example.saasmanager.usage.service;
 import com.example.usage_monitoring.model.UnderutilizedSubscription;
 import com.example.usage_monitoring.model.UsageLogDTO;
 import com.example.usage_monitoring.model.UsageLogRequest;
+import org.example.saasmanager.licenses.repository.LicenseRepository;
 import org.example.saasmanager.subscriptions.repository.SubscriptionsRepository;
 import org.example.saasmanager.usage.mapper.UsageMapper;
 import org.example.saasmanager.usage.repository.UsageRepository;
 import org.example.saasmanager.user.repository.UserRepository;
+import org.example.shared.entities.License;
 import org.example.shared.entities.Subscription;
 import org.example.shared.entities.UsageLog;
 import org.example.shared.entities.User;
@@ -22,16 +24,14 @@ import java.util.stream.Collectors;
 @Service
 public class UsageService {
     private final UsageRepository usageRepository;
-    private final UserRepository userRepository;
-    private final SubscriptionsRepository subscriptionsRepository;
+    private final LicenseRepository licenseRepository;
     private final UsageMapper usageMapper;
 
     @Autowired
     public UsageService(UsageRepository usageRepository, UsageMapper usageMapper
-            , UserRepository userRepository, SubscriptionsRepository subscriptionsRepository) {
+            ,  LicenseRepository licenseRepository) {
         this.usageRepository = usageRepository;
-        this.userRepository = userRepository;
-        this.subscriptionsRepository = subscriptionsRepository;
+        this.licenseRepository = licenseRepository;
         this.usageMapper = usageMapper;
     }
 
@@ -55,11 +55,10 @@ public class UsageService {
 
         return results.stream()
                 .map(result -> new UnderutilizedSubscription()
-                        .subscriptionId((Integer) result[0])
-                        .userId((Integer) result[1])
-                        .userName((String) result[2])
-                        .toolName((String) result[3])
-                        .activityCount((Integer) result[4])
+                        .licenseId((Integer) result[0])
+                        .userName((String) result[1])
+                        .toolName((String) result[2])
+                        .activityCount((Integer) result[3])
                 )
                 .collect(Collectors.toList());
     }
@@ -74,12 +73,10 @@ public class UsageService {
     }
 
     public UsageLogDTO logUserInteraction(UsageLogRequest usageLogRequest) {
-        User user = userRepository.findById(usageLogRequest.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Subscription subscription = subscriptionsRepository.findById(usageLogRequest.getSubscriptionId())
-                .orElseThrow(() -> new IllegalArgumentException("Subscription not found"));
+        License license = licenseRepository.findById(usageLogRequest.getLicenseId())
+                .orElseThrow(() -> new IllegalArgumentException("license not found"));
         UsageLog usageLog = UsageLog.builder()
-                .subscription(subscription).user(user)
+                .license(license)
                 .activityType(usageLogRequest.getActivityType()).build();
         UsageLog savedUsageLog = usageRepository.save(usageLog);
         return usageMapper.toDto(savedUsageLog);

@@ -11,7 +11,7 @@ const Home = () => {
     if (!token)
         return <Navigate to="/login" />;
 
-    const userFeatures = [
+    const BasicFeatures = [
         {
             title: "Profile Management",
             description: "View and update your profile details.",
@@ -24,8 +24,17 @@ const Home = () => {
         },
     ];
 
+    const userFeatures = [
+        ...BasicFeatures,
+        {
+            title: "View My Licenses",
+            description: "View and Interact with your licenses",
+            onClick: () => navigate("/mylicenses"),
+        }
+    ]
+
     const adminFeatures = [
-        ...userFeatures,
+        ...BasicFeatures,
         {
             title: "Manage Teams",
             description: "Create, manage, and assign users to teams.",
@@ -45,6 +54,11 @@ const Home = () => {
             title: "View Licenses",
             description: "View and manage Licenses.",
             onClick: () => navigate("/licenses")
+        },
+        {
+            title: "Usage Logs",
+            description: "View usage logs",
+            onClick: () => navigate("/usagelogs")
         },
     ];
 

@@ -21,12 +21,8 @@ public class UsageLog {
     private Integer logId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "subscription_id", nullable = false)
-    private Subscription subscription;
+    @JoinColumn(name = "license_id", nullable = false)
+    private License license;
 
     @Builder.Default
     @Column(name = "activity_date", nullable = false, updatable = false)

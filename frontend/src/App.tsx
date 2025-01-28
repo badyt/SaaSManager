@@ -12,6 +12,8 @@ import UserProfile from './pages/UserProfile';
 import Catalog from './pages/Catalog';
 import SubscriptionPage from './pages/SubscriptionPage';
 import LicensePage from './pages/LicensePage';
+import UserLicenses from './pages/UserLicenses';
+import UsageLogsPage from './pages/UsageLogsPage';
 function App() {
 
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path="/catalog" element = {<Catalog/>}/>
           <Route path="/subscriptions" element = {<SubscriptionPage/>}/>
           <Route path="/licenses" element = {<LicensePage/>}/>
+          <Route path="/mylicenses" element = {<UserLicenses/>}/>
+          <Route path="/usagelogs" element = {<UsageLogsPage/>}/>
         </Routes>
       </Router>
     </div>

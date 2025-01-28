@@ -20,6 +20,7 @@ const Login = () => {
       onSuccess: (data) => {
         toast.success("User Login successfully!");
         setUserInfo(data.user_id, data.access_token, data.name, data.role, data.email, data.status);
+        console.log(data.access_token);
         navigate('/');
       },
       onError: (error) => {

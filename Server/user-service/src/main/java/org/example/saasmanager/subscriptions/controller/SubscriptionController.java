@@ -8,6 +8,7 @@ import org.example.saasmanager.subscriptions.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class SubscriptionController implements SubscriptionsApi {
         this.subscriptionService = subscriptionService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<SubscriptionDTO> createNewSubscription(NewSubscription newSubscription) {
         SubscriptionDTO createdSubscription = subscriptionService.createNewSubscription(newSubscription);
@@ -43,6 +45,7 @@ public class SubscriptionController implements SubscriptionsApi {
                 .orElseGet(() -> ResponseEntity.notFound().build()); // 404 Not Found if not found
     }
 
+    @Override
     public ResponseEntity<SubscriptionDTO> updateSubscription(Integer subscriptionId, UpdateSubscription updateSubscription) {
         try {
             SubscriptionDTO updatedSubscription = subscriptionService.updateSubscription(subscriptionId, updateSubscription);
@@ -52,6 +55,7 @@ public class SubscriptionController implements SubscriptionsApi {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Void> deleteSubscription (Integer subscriptionId){
         subscriptionService.deleteSubscription(subscriptionId);

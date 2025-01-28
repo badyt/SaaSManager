@@ -11,8 +11,8 @@ import java.util.List;
 public interface UsageRepository extends JpaRepository<UsageLog, Integer> {
 
     @Query("SELECT u FROM UsageLog u " +
-            "WHERE (:userId IS NULL OR u.user.userId = :userId) " +
-            "AND (:toolId IS NULL OR u.subscription.tool.toolId = :toolId) " +
+            "WHERE (:userId IS NULL OR u.license.user.userId = :userId) " +
+            "AND (:toolId IS NULL OR u.license.subscription.tool.toolId = :toolId) " +
             "AND (:startDate IS NULL OR u.activityDate >= :startDate) " +
             "AND (:endDate IS NULL OR u.activityDate <= :endDate) " +
             "AND (:activityType IS NULL OR u.activityType = :activityType)")
@@ -24,11 +24,11 @@ public interface UsageRepository extends JpaRepository<UsageLog, Integer> {
             @Param("activityType") String activityType
     );
 
-    @Query("SELECT u.subscription.subscriptionId, u.user.userId, u.user.name as userName, " +
-            "u.subscription.tool.name as toolName,COUNT(u) as activityCount " +
+    @Query("SELECT u.license.licenseId, u.license.user.name as userName, " +
+            "u.license.subscription.tool.name as toolName,COUNT(u) as activityCount " +
             "FROM UsageLog u " +
             "WHERE u.activityDate >= :startDate " +
-            "GROUP BY u.subscription.subscriptionId, u.user.userId,u.user.name, u.subscription.tool.name  " +
+            "GROUP BY u.license.licenseId, u.license.user.name, u.license.subscription.tool.name  " +
             "HAVING COUNT(u) < :threshold")
     List<Object[]> findUnderutilizedSubscriptions(
             @Param("startDate") LocalDateTime startDate,

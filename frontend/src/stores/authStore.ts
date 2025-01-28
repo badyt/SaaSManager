@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
 interface State {
-  userId: number | undefined;
-  token: string | undefined;
-  username: string | undefined;
-  role: string | undefined;
-  email: string | undefined;
-  status: string | undefined;
+  userId?: number;
+  token?: string;
+  username?: string;
+  role?: string;
+  email?: string;
+  status?: string;
 }
 interface Action {
   setToken: (token: string) => void;

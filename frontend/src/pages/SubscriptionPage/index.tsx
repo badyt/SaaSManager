@@ -65,7 +65,7 @@ const SubscriptionPage: React.FC = () => {
             toast.error(`${errorMessage}`);
         }
     }
-    const handleDeleteSubscription = (subscriptionId: number | undefined) => {
+    const handleDeleteSubscription = (subscriptionId?: number) => {
         if (subscriptionId)
             removeSubscriptionMutation.mutate(subscriptionId
                 , {
@@ -93,7 +93,7 @@ const SubscriptionPage: React.FC = () => {
 
     };
 
-    const handleRemoveUser = (license_id: number | undefined) => {
+    const handleRemoveUser = (license_id?: number) => {
         if (!license_id)
             return toast.error("license id to remove is missing!");
         RemoveLicenseMutation.mutate(license_id
@@ -238,7 +238,7 @@ const SubscriptionPage: React.FC = () => {
                     setIsViewUsersOpen(false); setLicensesForSubscription(null);
                     setSelectedSubscription(null);
                 }}
-                onRemoveUser={(licenseId: number | undefined) => {
+                onRemoveUser={(licenseId?: number) => {
                     handleRemoveUser(licenseId);
                     setIsViewUsersOpen(false);
                     setLicensesForSubscription(null);
