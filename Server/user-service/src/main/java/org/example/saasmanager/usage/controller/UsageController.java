@@ -23,12 +23,12 @@ public class UsageController implements UsageApi {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public ResponseEntity<List<UsageLogDTO>> getLogs(Integer userId,
-                                                     Integer toolId,
+    public ResponseEntity<List<UsageLogDTO>> getLogs(String userName,
+                                                     String toolName,
                                                      OffsetDateTime startDate,
                                                      OffsetDateTime endDate,
                                                      String activityType) {
-        List<UsageLogDTO> logs = usageService.getLogs(userId, toolId, startDate, endDate, activityType);
+        List<UsageLogDTO> logs = usageService.getLogs(userName, toolName, startDate, endDate, activityType);
         return ResponseEntity.ok(logs);
     }
 

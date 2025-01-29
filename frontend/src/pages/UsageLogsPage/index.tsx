@@ -12,25 +12,33 @@ import {
   TableRow,
   Paper,
   CircularProgress,
+  TablePagination,
 } from "@mui/material";
 import { useFetchUsageLogs } from "../../hooks/useUsageLogs";
+import { pageTitleStyles } from "../../styles/general";
+import { useNavigate } from "react-router-dom";
 
 const UsageLogsPage = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
-    userId: "",
-    toolId: "",
+    userName: "",
+    toolName: "",
     startDate: "",
     endDate: "",
     activityType: "",
   });
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 9;
 
   const { data: usageLogs, isLoading, isError } = useFetchUsageLogs({
-    userId: filters.userId ? Number(filters.userId) : undefined,
-    toolId: filters.toolId ? Number(filters.toolId) : undefined,
-    startDate: filters.startDate || undefined,
-    endDate: filters.endDate || undefined,
+    userName: filters.userName || undefined,
+    toolName: filters.toolName || undefined,
+    startDate: filters.startDate ? new Date(filters.startDate).toISOString() : undefined,
+    endDate: filters.endDate ? new Date(filters.endDate).toISOString() : undefined,
     activityType: filters.activityType || undefined,
   });
+
+
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,17 +47,19 @@ const UsageLogsPage = () => {
 
   const handleClearFilters = () => {
     setFilters({
-      userId: "",
-      toolId: "",
+      userName: "",
+      toolName: "",
       startDate: "",
       endDate: "",
       activityType: "",
     });
   };
 
+  const paginatedLogs = usageLogs?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" sx={pageTitleStyles}>
         Usage Logs
       </Typography>
 
@@ -64,18 +74,18 @@ const UsageLogsPage = () => {
         }}
       >
         <TextField
-          label="User ID"
-          name="userId"
+          label="User Name"
+          name="userName"
           variant="outlined"
-          value={filters.userId}
+          value={filters.userName}
           onChange={handleFilterChange}
           sx={{ width: { xs: "100%", sm: "200px" } }}
         />
         <TextField
-          label="Tool ID"
-          name="toolId"
+          label="Tool Name"
+          name="toolName"
           variant="outlined"
-          value={filters.toolId}
+          value={filters.toolName}
           onChange={handleFilterChange}
           sx={{ width: { xs: "100%", sm: "200px" } }}
         />
@@ -87,6 +97,7 @@ const UsageLogsPage = () => {
           value={filters.startDate}
           onChange={handleFilterChange}
           sx={{ width: { xs: "100%", sm: "200px" } }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
           label="End Date"
@@ -96,6 +107,7 @@ const UsageLogsPage = () => {
           value={filters.endDate}
           onChange={handleFilterChange}
           sx={{ width: { xs: "100%", sm: "200px" } }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
           label="Activity Type"
@@ -108,7 +120,11 @@ const UsageLogsPage = () => {
         <Button variant="contained" color="primary" onClick={handleClearFilters}>
           Clear Filters
         </Button>
+        {/* Navigation Button to Underutilized Page */}
+
       </Box>
+
+
 
       {/* Logs Table */}
       {isLoading ? (
@@ -124,18 +140,18 @@ const UsageLogsPage = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>User ID</TableCell>
-                <TableCell>Tool ID</TableCell>
+                <TableCell>User Name</TableCell>
+                <TableCell>Tool Name</TableCell>
                 <TableCell>Activity Type</TableCell>
                 <TableCell>Activity Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {usageLogs?.length > 0 ? (
-                usageLogs.map((log: any) => (
-                  <TableRow key={log.id}>
-                    <TableCell>{log.userId}</TableCell>
-                    <TableCell>{log.toolId}</TableCell>
+              {paginatedLogs?.length > 0 ? (
+                paginatedLogs.map((log: UsageLog) => (
+                  <TableRow key={log.logId}>
+                    <TableCell>{log.userName}</TableCell>
+                    <TableCell>{log.toolName}</TableCell>
                     <TableCell>{log.activityType}</TableCell>
                     <TableCell>{new Date(log.activityDate).toLocaleString()}</TableCell>
                   </TableRow>
@@ -150,7 +166,28 @@ const UsageLogsPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
       )}
+      <TablePagination
+        // rowsPerPageOptions={[15, 30, 50]}
+        component="div"
+        count={usageLogs?.length || 0}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={(_, newPage) => setPage(newPage)}
+        // labelRowsPerPage="Logs per page"
+        showFirstButton
+        showLastButton
+        sx={{
+          "& .MuiTablePagination-toolbar .MuiTablePagination-selectLabel": { display: "none" }, // Hide "Rows per page" label
+          "& .MuiTablePagination-toolbar .MuiInputBase-root": { display: "none" }, // Hide the dropdown select
+        }}
+      />
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Button variant="contained" color="secondary" onClick={() => navigate("/underutilized")}>
+          View Underutilized Subscriptions
+        </Button>
+      </Box>
     </Box>
   );
 };

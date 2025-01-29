@@ -17,6 +17,7 @@ import { useAllocateLicense, useFetchLicenses } from "../../hooks/useLicense";
 import { useQueryClient } from "react-query";
 import { AxiosError } from "axios";
 import SelectUserDialog from "./SelectUserDialog";
+import { pageTitleStyles } from "../../styles/general";
 
 const LicensePage: React.FC = () => {
     const { data: subscriptions } = useFetchAllSubscriptions();
@@ -66,13 +67,7 @@ const LicensePage: React.FC = () => {
         <Box sx={{ padding: "2rem" }}>
             <Typography
                 variant="h3"
-                sx={{
-                    fontWeight: "bold",
-                    borderBottom: "2px solid #1976d2",
-                    paddingBottom: "0.5rem",
-                    marginBottom: "1.5rem",
-                    color: "#1976d2"
-                }}
+                sx={pageTitleStyles}
             >
                 License Management
             </Typography>

@@ -11,14 +11,14 @@ import java.util.List;
 public interface UsageRepository extends JpaRepository<UsageLog, Integer> {
 
     @Query("SELECT u FROM UsageLog u " +
-            "WHERE (:userId IS NULL OR u.license.user.userId = :userId) " +
-            "AND (:toolId IS NULL OR u.license.subscription.tool.toolId = :toolId) " +
-            "AND (:startDate IS NULL OR u.activityDate >= :startDate) " +
-            "AND (:endDate IS NULL OR u.activityDate <= :endDate) " +
-            "AND (:activityType IS NULL OR u.activityType = :activityType)")
+            "WHERE (:userName IS NULL OR LOWER(u.license.user.name) LIKE CONCAT(LOWER(CAST(:userName AS text)),'%')) " +
+            "AND (:toolName IS NULL OR LOWER(u.license.subscription.tool.name) LIKE CONCAT(LOWER(CAST(:toolName AS text)),'%')) " +
+            "AND (COALESCE(:startDate, u.activityDate) <= u.activityDate) " +
+            "AND (COALESCE(:endDate, u.activityDate) >= u.activityDate) " +
+            "AND (:activityType IS NULL OR LOWER(u.activityType) LIKE CONCAT(LOWER(CAST(:activityType AS text)),'%'))")
     List<UsageLog> findUsageLogsWithFilters(
-            @Param("userId") Integer userId,
-            @Param("toolId") Integer toolId,
+            @Param("userName") String userName,
+            @Param("toolName") String toolName,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("activityType") String activityType
@@ -33,6 +33,4 @@ public interface UsageRepository extends JpaRepository<UsageLog, Integer> {
     List<Object[]> findUnderutilizedSubscriptions(
             @Param("startDate") LocalDateTime startDate,
             @Param("threshold") Long threshold);
-
-
 }

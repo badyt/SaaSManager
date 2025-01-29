@@ -22,6 +22,7 @@ import { AxiosError } from "axios";
 import AssignedUsersDialog from "./AssignedUsersDialog";
 import { useRemoveLicense } from "../../hooks/useLicense";
 import { fetchLicensesBySubscription } from "../../api/licenseApi";
+import { pageTitleStyles } from "../../styles/general";
 
 
 
@@ -131,7 +132,7 @@ const SubscriptionPage: React.FC = () => {
 
     return (
         <Box sx={{ padding: "2rem" }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={pageTitleStyles}>
                 Subscription Management
             </Typography>
 

@@ -14,6 +14,7 @@ import { useAddSaasTool, useFetchCatalog, useRemoveSaaSTool } from "../../hooks/
 import AddToolDialog from "./AddToolDialog";
 import { useQueryClient } from "react-query";
 import ToolDetailsDialog from "./ToolDetailsDialog";
+import { pageTitleStyles } from "../../styles/general";
 
 const CatalogPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,13 +57,13 @@ const CatalogPage: React.FC = () => {
         },
         onError: (error) => { toast.error(`error occurred removing the tool from catalog: ${error}`) },
         onSettled: () => {
-      }
+        }
       });
   };
 
   return (
     <Box sx={{ padding: "2rem" }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" sx={pageTitleStyles} gutterBottom>
         SaaS Tools Catalog
       </Typography>
 

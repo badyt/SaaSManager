@@ -12,16 +12,16 @@ paths:
       tags:
         - Usage
       parameters:
-        - name: userId
+        - name: userName
           in: query
-          description: Filter logs by user ID
+          description: Filter logs by user name
           schema:
-            type: integer
-        - name: toolId
+            type: string
+        - name: toolName
           in: query
-          description: Filter logs by tool ID
+          description: Filter logs by tool name
           schema:
-            type: integer
+            type: string
         - name: startDate
           in: query
           description: Filter logs from this date (inclusive)

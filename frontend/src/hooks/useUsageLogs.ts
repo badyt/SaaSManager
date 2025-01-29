@@ -3,31 +3,31 @@ import { fetchUnderutilizedSubscriptions, fetchUsageLogs, logUserInteraction } f
 
 //Queries
 export const useFetchUsageLogs = ({
-    userId,
-    toolId,
+    userName,
+    toolName,
     startDate,
     endDate,
     activityType,
 }: {
-    userId?: number;
-    toolId?: number;
+    userName?: string;
+    toolName?: string;
     startDate?: string;
     endDate?: string;
     activityType?: string;
 }) => {
     return useQuery(
-        ["usageLogs", { userId, toolId, startDate, endDate, activityType }],
+        ["usageLogs", { userName, toolName, startDate, endDate, activityType }],
         () =>
             fetchUsageLogs({
-                userId,
-                toolId,
+                userName,
+                toolName,
                 startDate,
                 endDate,
                 activityType,
             }),
-        {
-            enabled: !!userId || !!toolId || !!startDate || !!endDate || !!activityType, // Run only if any parameter is provided
-        }
+        // {
+        //     enabled: !!userName || !!toolName || !!startDate || !!endDate || !!activityType, // Run only if any parameter is provided
+        // }
     );
 };
 

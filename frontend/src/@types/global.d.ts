@@ -37,5 +37,14 @@ declare global {
         allocated_at: string;
         last_used_at: string;
     }
+
+    interface UsageLog {
+        logId: number;
+        licenseId: number;
+        userName: string;
+        toolName: string;
+        activityDate: string;
+        activityType: string;
+    }
 }
 export { }

@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import TeamList from "./TeamList";
 import { useQueryClient } from "react-query";
 import { useUsers } from "../../hooks/useUsers";
+import { pageTitleStyles } from "../../styles/general";
 
 const TeamManagement: React.FC = () => {
     const { userId } = useAuthStore();
@@ -79,7 +80,7 @@ const TeamManagement: React.FC = () => {
 
     return (
         <Box sx={{ padding: "2rem" }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" sx={pageTitleStyles} gutterBottom>
                 Team Management
             </Typography>
 

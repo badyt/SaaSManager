@@ -2,14 +2,14 @@ import useAuthStore from "../stores/authStore";
 import apiClient from "./apiClient";
 
 export const fetchUsageLogs = async ({
-    userId,
-    toolId,
+    userName,
+    toolName,
     startDate,
     endDate,
     activityType,
 }: {
-    userId?: number;
-    toolId?: number;
+    userName?: string;
+    toolName?: string;
     startDate?: string;
     endDate?: string;
     activityType?: string;
@@ -19,8 +19,8 @@ export const fetchUsageLogs = async ({
     // Construct query parameters dynamically
     const params = new URLSearchParams();
 
-    if (userId) params.append("userId", userId.toString());
-    if (toolId) params.append("toolId", toolId.toString());
+    if (userName) params.append("userName", userName.toString());
+    if (toolName) params.append("toolName", toolName.toString());
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
     if (activityType) params.append("activityType", activityType);

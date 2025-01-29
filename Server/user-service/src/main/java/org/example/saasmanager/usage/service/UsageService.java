@@ -37,15 +37,19 @@ public class UsageService {
 
     @Transactional(readOnly = true)
     public List<UsageLogDTO> getLogs(
-            Integer userId,
-            Integer toolId,
+            String userName,
+            String toolName,
             OffsetDateTime startDate,
             OffsetDateTime endDate,
             String activityType) {
 
+        // Convert to LocalDateTime only if not null, otherwise pass null
+        LocalDateTime startDateTime = (startDate != null) ? startDate.toLocalDateTime() : null;
+        LocalDateTime endDateTime = (endDate != null) ? endDate.toLocalDateTime() : null;
+
         // Fetch logs with optional filters
-        List<UsageLog> logs = usageRepository.findUsageLogsWithFilters(userId, toolId,
-                startDate.toLocalDateTime(), endDate.toLocalDateTime(), activityType);
+        List<UsageLog> logs = usageRepository.findUsageLogsWithFilters(userName, toolName,
+                startDateTime, endDateTime, activityType);
         return usageMapper.toDtoList(logs);
     }
 
