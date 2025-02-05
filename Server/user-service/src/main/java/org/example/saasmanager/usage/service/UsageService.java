@@ -18,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +32,7 @@ public class UsageService {
 
     @Autowired
     public UsageService(UsageRepository usageRepository, UsageMapper usageMapper
-            ,  LicenseRepository licenseRepository) {
+            , LicenseRepository licenseRepository) {
         this.usageRepository = usageRepository;
         this.licenseRepository = licenseRepository;
         this.usageMapper = usageMapper;
@@ -53,25 +56,61 @@ public class UsageService {
         return usageMapper.toDtoList(logs);
     }
 
-    public List<UnderutilizedSubscription> getUnderutilizedSubscriptions(int threshold, String period) {
+    @Transactional(readOnly = true)
+    public List<UnderutilizedSubscription> getUnderutilizedSubscriptions(Integer threshold, String period) {
         LocalDateTime startDate = calculateStartDate(period);
-        List<Object[]> results = usageRepository.findUnderutilizedSubscriptions(startDate, (long) threshold);
+        System.out.println(startDate);
 
-        return results.stream()
+        // Get all licenses from the repository
+        List<License> allLicenses = licenseRepository.findAll();
+
+        // Get underutilized subscriptions from usage logs
+        List<Object[]> underutilizedResults = usageRepository.findUnderutilizedSubscriptions(startDate, threshold);
+
+        // Extract underutilized license IDs
+        Set<Integer> underutilizedLicenseIds = underutilizedResults.stream()
+                .map(result -> (Integer) result[0]) // Extract licenseId from each record
+                .collect(Collectors.toSet());
+
+        // Get all active licenses that appeared in the logs (regardless of count)
+        Set<Integer> activeLicenseIds = new HashSet<>(usageRepository.findAllActiveLicenseIds(startDate));
+
+        // Convert underutilized subscriptions from logs into DTOs
+        List<UnderutilizedSubscription> underutilizedSubscriptions = underutilizedResults.stream()
                 .map(result -> new UnderutilizedSubscription()
                         .licenseId((Integer) result[0])
                         .userName((String) result[1])
                         .toolName((String) result[2])
-                        .activityCount((Integer) result[3])
+                        .allocatedAt(((LocalDateTime) result[3]).atOffset(ZoneOffset.UTC))
+                        .activityCount((Integer) result[4])
                 )
                 .collect(Collectors.toList());
+
+        // Find licenses that have **zero** activities
+        List<UnderutilizedSubscription> zeroActivityLicenses = allLicenses.stream()
+                .filter(license ->
+                        !underutilizedLicenseIds.contains(license.getLicenseId()) // Not in underutilized list
+                                && !activeLicenseIds.contains(license.getLicenseId()) // Not in any usage logs
+                                && license.getAllocatedAt().isBefore(LocalDateTime.now().minusDays(30)) // allocated before thi month
+                )
+                .map(license -> new UnderutilizedSubscription()
+                        .licenseId(license.getLicenseId())
+                        .userName(license.getUser().getName())  // Assuming License has User relation
+                        .toolName(license.getSubscription().getTool().getName())  // Assuming License -> Subscription -> Tool
+                        .allocatedAt(license.getAllocatedAt().atOffset(ZoneOffset.UTC))
+                        .activityCount(0) // Zero activities
+                )
+                .toList();
+
+        // Combine both underutilized and zero-activity licenses
+        underutilizedSubscriptions.addAll(zeroActivityLicenses);
+        return underutilizedSubscriptions;
     }
 
     private LocalDateTime calculateStartDate(String period) {
         if (period == null || !period.endsWith("d")) {
             throw new IllegalArgumentException("Invalid period format. Expected format: 'Xd', e.g., '30d'");
         }
-
         int days = Integer.parseInt(period.replace("d", ""));
         return LocalDateTime.now().minusDays(days);
     }

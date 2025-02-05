@@ -55,11 +55,6 @@ const Home = () => {
             description: "View and manage Licenses.",
             onClick: () => navigate("/licenses")
         },
-        {
-            title: "Usage Logs",
-            description: "View usage logs",
-            onClick: () => navigate("/usagelogs")
-        },
     ];
 
     const features = (role === Roles.Admin) ? adminFeatures : userFeatures;

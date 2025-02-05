@@ -28,7 +28,7 @@ const UsageLogsPage = () => {
     activityType: "",
   });
   const [page, setPage] = useState(0);
-  const rowsPerPage = 9;
+  const rowsPerPage = 10;
 
   const { data: usageLogs, isLoading, isError } = useFetchUsageLogs({
     userName: filters.userName || undefined,
@@ -120,11 +120,7 @@ const UsageLogsPage = () => {
         <Button variant="contained" color="primary" onClick={handleClearFilters}>
           Clear Filters
         </Button>
-        {/* Navigation Button to Underutilized Page */}
-
       </Box>
-
-
 
       {/* Logs Table */}
       {isLoading ? (
@@ -140,10 +136,10 @@ const UsageLogsPage = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>User Name</TableCell>
-                <TableCell>Tool Name</TableCell>
-                <TableCell>Activity Type</TableCell>
-                <TableCell>Activity Date</TableCell>
+                <TableCell sx={{fontWeight: "bold"}}>User Name</TableCell>
+                <TableCell sx={{fontWeight: "bold"}}>Tool Name</TableCell>
+                <TableCell sx={{fontWeight: "bold"}}>Activity Type</TableCell>
+                <TableCell sx={{fontWeight: "bold"}}>Activity Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -185,7 +181,7 @@ const UsageLogsPage = () => {
       />
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Button variant="contained" color="secondary" onClick={() => navigate("/underutilized")}>
-          View Underutilized Subscriptions
+          View Underutilized Licenses
         </Button>
       </Box>
     </Box>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "react-query";
-import { fetchUnderutilizedSubscriptions, fetchUsageLogs, logUserInteraction } from "../api/usagelogsApi";
+import { fetchUnderutilizedLicenses, fetchUsageLogs, logUserInteraction } from "../api/usagelogsApi";
 
 //Queries
 export const useFetchUsageLogs = ({
@@ -31,7 +31,7 @@ export const useFetchUsageLogs = ({
     );
 };
 
-export const useFetchUnderutilizedSubscriptions = ({
+export const useFetchUnderutilizedLicenses = ({
     threshold = 5,
     period = "30d",
 }: {
@@ -39,8 +39,8 @@ export const useFetchUnderutilizedSubscriptions = ({
     period?: string;
 }) => {
     return useQuery(
-        ["underutilizedSubscriptions", { threshold, period }],
-        () => fetchUnderutilizedSubscriptions({ threshold, period }),
+        ["underutilizedLicenses", { threshold, period }],
+        () => fetchUnderutilizedLicenses({ threshold, period }),
         {
             keepPreviousData: true, // Keep previous data while fetching new data
             staleTime: 300000, // 5 minutes

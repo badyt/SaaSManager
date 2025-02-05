@@ -1,11 +1,14 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
-import React from "react";
+import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
 import { Roles } from "../../constants/roles";
+import MenuIcon from '@mui/icons-material/Menu';
+import SideDrawer from "../SideDrawer";
 
 const MainAppBar: React.FC = () => {
     const { token, role, logout } = useAuthStore();
+    const [openDrawer, setDrawer] = useState(false);
     const navigate = useNavigate();
     const handleLogout = () => {
         logout();
@@ -19,6 +22,17 @@ const MainAppBar: React.FC = () => {
             </Typography> </Toolbar>
         else
             return <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                    onClick={() => setDrawer(!openDrawer)}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <SideDrawer setDrawer={(value) => setDrawer(value)} isOpen={openDrawer} />
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                     SaaS Platform
                 </Typography>

@@ -25,12 +25,20 @@ public interface UsageRepository extends JpaRepository<UsageLog, Integer> {
     );
 
     @Query("SELECT u.license.licenseId, u.license.user.name as userName, " +
-            "u.license.subscription.tool.name as toolName,COUNT(u) as activityCount " +
+            "u.license.subscription.tool.name as toolName, "+
+            "u.license.allocatedAt, " +
+            "COUNT(u) as activityCount " +
             "FROM UsageLog u " +
             "WHERE u.activityDate >= :startDate " +
-            "GROUP BY u.license.licenseId, u.license.user.name, u.license.subscription.tool.name  " +
+            "AND u.license.allocatedAt <= :startDate " +
+            "GROUP BY u.license.licenseId, u.license.user.name, u.license.subscription.tool.name, " +
+            "u.license.allocatedAt " +
             "HAVING COUNT(u) < :threshold")
     List<Object[]> findUnderutilizedSubscriptions(
             @Param("startDate") LocalDateTime startDate,
-            @Param("threshold") Long threshold);
+            @Param("threshold") Integer threshold);
+
+    @Query("SELECT DISTINCT u.license.licenseId FROM UsageLog u WHERE u.activityDate >= :startDate")
+    List<Integer> findAllActiveLicenseIds(@Param("startDate") LocalDateTime startDate);
+
 }

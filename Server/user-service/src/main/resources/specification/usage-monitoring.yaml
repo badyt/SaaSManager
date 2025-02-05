@@ -147,6 +147,9 @@ components:
         activityCount:
           type: integer
           example: 2
+        allocated_at:
+          type: string
+          format: date-time
 
     UsageLogRequest:
       type: object

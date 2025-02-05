@@ -32,7 +32,7 @@ export const fetchUsageLogs = async ({
     return response.data;
 };
 
-export const fetchUnderutilizedSubscriptions = async ({
+export const fetchUnderutilizedLicenses = async ({
     threshold = 5,
     period = "30d",
 }: {
