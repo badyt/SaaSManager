@@ -10,6 +10,13 @@ declare global {
         name?: string;
     }
 
+    interface TeamDTO {
+        id: number;
+        name: string;
+        description: string;
+        createdBy: number;
+    }
+
     interface CatalogTool {
         tool_id: number;
         name: string;
@@ -33,6 +40,7 @@ declare global {
         subscription_id: number;
         user_id: number;
         user_name: string;
+        cost: number;
         tool_name: string;
         allocated_at: string;
         last_used_at: string;
@@ -45,6 +53,15 @@ declare global {
         toolName: string;
         activityDate: string;
         activityType: string;
+    }
+
+    interface UnderutilizedLicense {
+        licenseId: number;
+        userName: string;
+        toolName: string;
+        licenseCost: number;
+        activityCount: number;
+        allocated_at: string;
     }
 }
 export { }

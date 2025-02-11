@@ -144,6 +144,8 @@ components:
           type: string
         toolName:
           type: string
+        licenseCost:
+          type: integer
         activityCount:
           type: integer
           example: 2

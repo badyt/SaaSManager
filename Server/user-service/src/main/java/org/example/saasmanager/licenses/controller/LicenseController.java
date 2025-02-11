@@ -52,4 +52,10 @@ public class LicenseController implements LicensesApi {
         List<LicenseDTO> foundLicenses = licenseService.getAllByUser(userId);
         return new ResponseEntity<>(foundLicenses,HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<List<LicenseDTO>> getTeamLicenses(Integer teamId) {
+        List<LicenseDTO> foundLicenses = licenseService.getTeamLicenses(teamId);
+        return new ResponseEntity<>(foundLicenses,HttpStatus.OK);
+    }
 }

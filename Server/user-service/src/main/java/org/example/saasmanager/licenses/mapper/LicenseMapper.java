@@ -23,6 +23,7 @@ public interface LicenseMapper {
     @Mapping(source = "subscription", target = "subscriptionId", qualifiedByName = "subscriptionToSubscriptionId")
     @Mapping(source = "user", target = "userId", qualifiedByName = "userToUserId")
     @Mapping(source = "user", target = "userName", qualifiedByName = "userToUserName")
+    @Mapping(source = "subscription", target = "cost", qualifiedByName = "subscriptionToCost")
     @Mapping(source = "subscription", target = "toolName", qualifiedByName = "subscriptionToToolName")
     @Mapping(source = "allocatedAt", target = "allocatedAt", qualifiedByName = "localDateTimeToOffsetDateTime")
     @Mapping(source = "lastUsedAt", target = "lastUsedAt", qualifiedByName = "localDateTimeToOffsetDateTime")
@@ -79,6 +80,12 @@ public interface LicenseMapper {
     @Named("subscriptionToToolName")
     default  String subscriptionToToolName(Subscription subscription) {
         return subscription != null ? subscription.getTool().getName() : null;
+    }
+
+    // Custom mapping method for user -> userName
+    @Named("subscriptionToCost")
+    default  Integer subscriptionToCost(Subscription subscription) {
+        return subscription != null ? subscription.getTool().getDefaultCost().intValue() : null;
     }
 
     // Custom mapping method for LocalDateTime -> OffsetDateTime

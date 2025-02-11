@@ -16,14 +16,6 @@ import {
     IconButton,
 } from "@mui/material";
 
-interface UnderutilizedLicense {
-    licenseId: number;
-    userName: string;
-    toolName: string;
-    activityCount: number;
-    allocated_at: string;
-}
-
 import { useFetchUnderutilizedLicenses } from "../../hooks/useUsageLogs";
 import { pageTitleStyles } from "../../styles/general";
 import { Delete } from "@mui/icons-material";
@@ -53,8 +45,6 @@ const UnderutilizedPage = () => {
             [name]: name === "threshold" ? Number(value) : value,
         }));
     };
-    console.log(underutilizedLicenses);
-    
 
     const handleRemoveLicense = (license_id?: number) => {
         if (!license_id)

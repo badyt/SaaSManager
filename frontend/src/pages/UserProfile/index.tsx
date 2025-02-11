@@ -9,6 +9,8 @@ import {
     DialogContent,
     DialogActions,
     IconButton,
+    Paper,
+    Divider,
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit'; // Import edit icon
 import useAuthStore from "../../stores/authStore";
@@ -79,75 +81,48 @@ const UserProfile = () => {
 
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 4,
-            }}
-        >
-            <Box
-                sx={{
-                    width: "100%",
-                    maxWidth: 600,
-                    padding: 4,
-                    borderRadius: 2,
-                    boxShadow: 3,
-                }}
-            >
-                <Typography variant="h4" gutterBottom textAlign="center">
-                    User Profile
-                </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", p: 4 }}>
 
-                {/* Profile Details */}
-                <Box sx={{ marginBottom: 3 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                        Username:
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Typography>{username}</Typography>
-                        <IconButton
-                            size="small"
-                            onClick={() => setEditUsernameOpen(true)}
-                            aria-label="Edit username"
-                        >
-                            <EditIcon fontSize="small" />
-                        </IconButton>
-                    </Box>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
+                User Profile
+            </Typography>
+            <Divider sx={{ mb: 3 }} />
+
+            {/* Profile Details */}
+            <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Username:</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Typography>{username}</Typography>
+                    <IconButton size="small" onClick={() => setEditUsernameOpen(true)} aria-label="Edit username">
+                        <EditIcon fontSize="small" />
+                    </IconButton>
                 </Box>
-
-                <Box sx={{ marginBottom: 3 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                        Email:
-                    </Typography>
-                    <Typography>{email}</Typography>
-                </Box>
-
-                <Box sx={{ marginBottom: 3 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                        Role:
-                    </Typography>
-                    <Typography>{role?.slice(5)}</Typography>
-                </Box>
-
-                <Box sx={{ marginBottom: 3 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                        Status:
-                    </Typography>
-                    <Typography>{status}</Typography>
-                </Box>
-
-                {/* Change Password Button */}
-                <Button
-                    variant="outlined"
-                    // fullWidth
-                    onClick={() => setChangePasswordOpen(true)}
-                >
-                    Change Password
-                </Button>
             </Box>
+
+            <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Email:</Typography>
+                <Typography color="text.secondary">{email}</Typography>
+            </Box>
+
+            <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Role:</Typography>
+                <Typography color="text.secondary">{role?.slice(5)}</Typography>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Status:</Typography>
+                <Typography color="text.secondary">{status}</Typography>
+            </Box>
+
+            {/* Change Password Button */}
+            <Button
+                variant="contained"
+                sx={{ borderRadius: 2, fontWeight: "bold", width: "15rem" }}
+                onClick={() => setChangePasswordOpen(true)}
+            >
+                Change Password
+            </Button>
+
 
             {/* Edit Username Dialog */}
             <Dialog open={isEditUsernameOpen} onClose={() => setEditUsernameOpen(false)}>
@@ -165,7 +140,7 @@ const UserProfile = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setEditUsernameOpen(false)}>Cancel</Button>
-                    <Button onClick={handleEditName}>Save</Button>
+                    <Button onClick={handleEditName} variant="contained">Save</Button>
                 </DialogActions>
             </Dialog>
 
@@ -201,7 +176,7 @@ const UserProfile = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closePasswordDialog}>Cancel</Button>
-                    <Button onClick={handleChangePassword}>Save</Button>
+                    <Button onClick={handleChangePassword} variant="contained">Save</Button>
                 </DialogActions>
             </Dialog>
         </Box>

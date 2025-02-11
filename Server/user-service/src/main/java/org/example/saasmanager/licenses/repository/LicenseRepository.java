@@ -21,4 +21,10 @@ public interface LicenseRepository extends JpaRepository<License,Integer> {
 
     @Query("SELECT l FROM License l WHERE l.user.userId = :userId")
     List<License> findAllByUserId(@Param("userId") Integer userId);
+
+    @Query("SELECT l FROM License l " +
+            "JOIN UserTeam ut ON ut.user.userId = l.user.userId " +
+            "WHERE ut.team.teamId = :teamId")
+    List<License> findLicensesByTeamId(@Param("teamId") Integer teamId);
+
 }

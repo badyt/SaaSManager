@@ -3,13 +3,8 @@ import { Box, Typography, Paper, Card, CardActionArea, CardContent, Button, Grid
 import { pageTitleStyles } from "../../styles/general";
 import SubscriptionCosts from "./SubscriptionCosts";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-// Placeholder report components
-// const SubscriptionsCosts = () => <Typography variant="h5">Total Subscriptions Cost Report</Typography>;
-// const AllocatedLicensesCost = () => <Typography variant="h5">Allocated & Unallocated Licenses Cost Report</Typography>;
-// const SpecificSubscriptionLicenses = () => <Typography variant="h5">Licenses per Subscription Report</Typography>;
-const AllocatedLicenses = () => <Typography variant="h5">Allocated Licenses per Team Report</Typography>;
-const UserAllocatedLicenses = () => <Typography variant="h5">Allocated Licenses per User Report</Typography>;
-const UnderutilizedLicenses = () => <Typography variant="h5">Underutilized Licenses Report</Typography>;
+import AllocatedLicenses from "./AllocatedLicenses";
+import UnderutilizedCosts from "./UnderutilizedCosts";
 
 const ReportsPage: React.FC = () => {
     const [selectedReport, setSelectedReport] = useState<string | null>(null);
@@ -19,16 +14,10 @@ const ReportsPage: React.FC = () => {
         switch (selectedReport) {
             case "subscriptionsCosts":
                 return <SubscriptionCosts />;
-            // case "allocatedLicensesCost":
-            //     return <AllocatedLicensesCost />;
-            // case "specificSubscriptionLicenses":
-            //     return <SpecificSubscriptionLicenses />;
             case "allocatedLicenses":
                 return <AllocatedLicenses />;
-            case "userAllocatedLicenses":
-                return <UserAllocatedLicenses />;
             case "underutilizedLicenses":
-                return <UnderutilizedLicenses />;
+                return <UnderutilizedCosts />;
             default:
                 return null; // No placeholder, just show buttons
         }

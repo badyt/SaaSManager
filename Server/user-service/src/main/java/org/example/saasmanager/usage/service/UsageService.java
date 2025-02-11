@@ -81,8 +81,9 @@ public class UsageService {
                         .licenseId((Integer) result[0])
                         .userName((String) result[1])
                         .toolName((String) result[2])
-                        .allocatedAt(((LocalDateTime) result[3]).atOffset(ZoneOffset.UTC))
-                        .activityCount((Integer) result[4])
+                        .licenseCost((Integer) result[3])
+                        .allocatedAt(((LocalDateTime) result[4]).atOffset(ZoneOffset.UTC))
+                        .activityCount((Integer) result[5])
                 )
                 .collect(Collectors.toList());
 
@@ -97,6 +98,7 @@ public class UsageService {
                         .licenseId(license.getLicenseId())
                         .userName(license.getUser().getName())  // Assuming License has User relation
                         .toolName(license.getSubscription().getTool().getName())  // Assuming License -> Subscription -> Tool
+                        .licenseCost(license.getSubscription().getTool().getDefaultCost().intValue())
                         .allocatedAt(license.getAllocatedAt().atOffset(ZoneOffset.UTC))
                         .activityCount(0) // Zero activities
                 )

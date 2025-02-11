@@ -6,6 +6,7 @@ import com.example.users.model.UserDTO;
 import org.example.saasmanager.licenses.mapper.LicenseMapper;
 import org.example.saasmanager.licenses.repository.LicenseRepository;
 import org.example.saasmanager.subscriptions.repository.SubscriptionsRepository;
+import org.example.saasmanager.team.repository.UserTeamRepository;
 import org.example.saasmanager.user.repository.UserRepository;
 import org.example.shared.entities.License;
 import org.example.shared.entities.Subscription;
@@ -24,14 +25,18 @@ public class LicenseService {
     private final LicenseMapper licenseMapper;
     private final SubscriptionsRepository subscriptionsRepository;
     private final UserRepository userRepository;
+    private final UserTeamRepository userTeamRepository;
 
     @Autowired
     public LicenseService(LicenseRepository licenseRepository, LicenseMapper licenseMapper,
-                          SubscriptionsRepository subscriptionsRepository, UserRepository userRepository) {
+                          SubscriptionsRepository subscriptionsRepository, UserRepository userRepository
+    ,UserTeamRepository userTeamRepository) {
         this.licenseRepository = licenseRepository;
         this.licenseMapper = licenseMapper;
         this.subscriptionsRepository = subscriptionsRepository;
         this.userRepository = userRepository;
+        this.userTeamRepository = userTeamRepository;
+
     }
 
     public List<LicenseDTO> getAllLicenses() {
@@ -82,6 +87,12 @@ public class LicenseService {
 
     public List<LicenseDTO> getAllByUser(Integer userId) {
         List<License> foundLicenses = licenseRepository.findAllByUserId(userId);
+        return licenseMapper.toDtoList(foundLicenses);
+    }
+
+
+    public List<LicenseDTO> getTeamLicenses(Integer teamId){
+        List<License> foundLicenses = licenseRepository.findLicensesByTeamId(teamId);
         return licenseMapper.toDtoList(foundLicenses);
     }
 }

@@ -139,8 +139,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          example: "team_123"
+          type: integer
         name:
           type: string
           example: "Development Team"

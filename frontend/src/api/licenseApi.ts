@@ -25,6 +25,14 @@ export const fetchLicensesByUser = async (user_id: number) => {
     return response.data;
 };
 
+export const fetchLicensesByTeam = async (team_id: number) => {
+    const { token } = useAuthStore.getState();
+    const response = await apiClient.get(`/licenses/getTeamLicenses/${team_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+};
+
 export const allocateNewLicense = async (NewLicense: { subscription_id: number, user_id: number }) => {
     const { token } = useAuthStore.getState();
     const response = await apiClient.post("/licenses/allocateLicense", NewLicense, {
