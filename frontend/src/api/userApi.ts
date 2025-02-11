@@ -2,11 +2,7 @@ import useAuthStore from "../stores/authStore";
 import apiClient from "./apiClient";
 
 export const fetchUsers = async () => {
-  const { token } = useAuthStore.getState();
-  const response = await apiClient.get("/users/getUsers",
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const response = await apiClient.get("/users/getUsers");
   return response.data;
 };
 
@@ -22,12 +18,7 @@ export const loginUser = async (credentials: { email: string; password: string }
 
 
 export const fetchUserTeams = async () => {
-  const { token } = useAuthStore.getState();
-  const response = await apiClient.get("/teams/my-teams",
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  const response = await apiClient.get("/teams/my-teams");
   return response.data;
 };
 
@@ -35,27 +26,11 @@ export const updateUser = async (data: Partial<{ id: number; email: string; stat
   if (!data.id) {
     throw new Error("userId is required to update user.");
   }
-  const { token } = useAuthStore.getState();
-  const response = await apiClient.put(`/users/updateUser/${data.id}`,
-    data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-    }
-
-  })
+  const response = await apiClient.put(`/users/updateUser/${data.id}`, data)
   return response.data;
 }
 
 export const updateUserPassword = async (data: { id: number, oldPassword: string, newPassword: string }) => {
-  const { token } = useAuthStore.getState();
-  const response = await apiClient.put(`/users/updateUserPassword/${data.id}`,
-    data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-    }
-
-  })
+  const response = await apiClient.put(`/users/updateUserPassword/${data.id}`, data)
   return response.data;
 }

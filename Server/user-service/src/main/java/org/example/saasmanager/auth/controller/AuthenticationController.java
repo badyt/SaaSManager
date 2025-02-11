@@ -2,20 +2,15 @@ package org.example.saasmanager.auth.controller;
 
 
 import com.example.auth.api.AuthApi;
-import com.example.auth.model.LoginRequest;
-import com.example.auth.model.LoginResponse;
-import com.example.auth.model.RegisterRequest;
-import com.example.auth.model.RegisterResponse;
+import com.example.auth.model.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.example.saasmanager.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 
@@ -39,5 +34,21 @@ public class AuthenticationController implements AuthApi {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
+    @Override
+    public ResponseEntity<LoginResponse> refreshToken(
+            Object body
+    ) {
+        try {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 
+            if (request == null || response == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+            authService.refreshToken(request, response);
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

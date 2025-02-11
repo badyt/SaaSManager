@@ -37,7 +37,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
+  /auth/refresh:
+    post:
+      summary: Refresh Access Token
+      description: Refreshes the access token using a valid refresh token.
+      operationId: refreshToken
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: [ ]  # Requires a valid refresh token in the Authorization header
+      requestBody:
+        description: The request does not require a body, as the refresh token is sent in the Authorization header.
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { }  # No request body is needed
+      responses:
+        "200":
+          description: Successfully refreshed access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "400":
+          description: Invalid or missing refresh token
+        "401":
+          description: Unauthorized - Refresh token is expired or invalid
+        "500":
+          description: Internal server error
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     RegisterRequest:
       type: object

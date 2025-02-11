@@ -72,26 +72,34 @@ public class AuthenticationService {
     }
 
 
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
+
+        final String refreshToken = authHeader.substring(7);
+        final String userEmail = jwtService.extractUsername(refreshToken);
+
         if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail)
-                    .orElseThrow();
+            var user = repository.findByEmail(userEmail).orElseThrow();
+
             if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user,user.getUserId());
+                var newAccessToken = jwtService.generateToken(user, user.getUserId());
+
+                // **Generate a new refresh token only if it is expired**
+                var newRefreshToken = jwtService.isTokenExpired(refreshToken)
+                        ? jwtService.generateRefreshToken(user) // Generate a new one
+                        : refreshToken; // Keep the old one if it's still valid
+
                 var authResponse = new LoginResponse()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken);
+                        .userId(user.getUserId())
+                        .accessToken(newAccessToken)
+                        .refreshToken(newRefreshToken)
+                        .name(user.getName())
+                        .role(user.getRole().getRoleName().name())
+                        .email(user.getEmail())
+                        .status(user.getStatus());
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }

@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/register", "/auth/login")
+                        req.requestMatchers("/auth/register", "/auth/login", "/auth/refresh")
                                 .permitAll()
                                 .requestMatchers("/teams/createTeam").hasRole("ADMIN")
                                 .anyRequest()
