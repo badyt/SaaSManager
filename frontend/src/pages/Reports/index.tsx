@@ -19,7 +19,7 @@ const ReportsPage: React.FC = () => {
             case "underutilizedLicenses":
                 return <UnderutilizedCosts />;
             default:
-                return null; // No placeholder, just show buttons
+                return null; 
         }
     };
 
@@ -55,10 +55,7 @@ const ReportsPage: React.FC = () => {
                     <Grid2 container spacing={3} justifyContent="center" sx={{ mt: 3 }}>
                         {[
                             { id: "subscriptionsCosts", title: "Subscriptions cost", description: "costs subscriptions, allocated licenses." },
-                            // { id: "LicensesCost", title: "Licenses cost", description: "Total cost for all licenses." },
-                            // { id: "specificSubscriptionLicenses", title: "Licenses for a subscription", description: "Total costs for licenses subscription." },
                             { id: "allocatedLicenses", title: "Allocated licenses", description: "costs for licenses for a team/user." },
-                            // { id: "userAllocatedLicenses", title: "Allocated licenses per user", description: "Total costs for licenses for a user." },
                             { id: "underutilizedLicenses", title: "Underutilized licenses", description: "Total costs for underutilized licenses." }
                         ].map(({ id, title, description }) => (
                             <Grid2 sx={{

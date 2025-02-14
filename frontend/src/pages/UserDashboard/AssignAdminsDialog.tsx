@@ -15,41 +15,30 @@ import {
     Box,
     Typography,
 } from "@mui/material";
-
-interface User {
-    user_id: number;
-    user_name: string;
-}
+import { useUsers } from "../../hooks/useUsers";
 
 interface Props {
     open: boolean;
     onClose: () => void;
-    onAddUser: () => void;
-    availableUsers: User[];
-    selectedUserId: number | null;
-    handleUserSelect: (teamId: number, userId: number) => void;
-    teamId: number;
+    onAssignUser: (userId: number | null) => void;
 }
-const AddUserDialog: React.FC<Props> = ({
+const AssignAdminsDialog: React.FC<Props> = ({
     open,
     onClose,
-    onAddUser,
-    availableUsers,
-    selectedUserId,
-    handleUserSelect,
-    teamId,
+    onAssignUser,
 }) => {
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const { data: users } = useUsers();
     const [searchTerm, setSearchTerm] = useState("");
-
     // Filter users based on the search term
-    const filteredUsers = availableUsers?.filter((user) =>
-        user.user_name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredUsers = users?.filter((user: UserDTO) =>
+        user.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>
-                <Typography variant="h6">Select a User to Add</Typography>
+                <Typography variant="h6">Select a User to Assign</Typography>
             </DialogTitle>
             <DialogContent>
                 {/* Search bar */}
@@ -68,11 +57,11 @@ const AddUserDialog: React.FC<Props> = ({
                 <Box sx={{ maxHeight: "20rem", overflowY: "auto" }}>
                     <List>
                         {filteredUsers?.length > 0 ? (
-                            filteredUsers.map((user) => (
-                                <ListItem key={user.user_id} disablePadding>
+                            filteredUsers.map((user: UserDTO) => (
+                                <ListItem key={user.userId} disablePadding>
                                     <ListItemButton
-                                        selected={selectedUserId === user.user_id}
-                                        onClick={() => handleUserSelect(teamId, user.user_id)}
+                                        selected={selectedUserId === user.userId}
+                                        onClick={() => setSelectedUserId(user.userId)}
                                         sx={{
                                             "&.Mui-selected": {
                                                 backgroundColor: "primary.light",
@@ -84,9 +73,9 @@ const AddUserDialog: React.FC<Props> = ({
                                         }}
                                     >
                                         <ListItemIcon>
-                                            <Avatar>{user.user_name[0]}</Avatar>
+                                            <Avatar>{user.name?.slice(0, 1)}</Avatar>
                                         </ListItemIcon>
-                                        <ListItemText primary={user.user_name} />
+                                        <ListItemText primary={user.name} />
                                     </ListItemButton>
                                 </ListItem>
                             ))
@@ -103,16 +92,16 @@ const AddUserDialog: React.FC<Props> = ({
                     Cancel
                 </Button>
                 <Button
-                    onClick={onAddUser}
+                    onClick={() => onAssignUser(selectedUserId)}
                     color="primary"
                     variant="contained"
                     disabled={selectedUserId === null}
                 >
-                    Add User
+                    Assign as Admin
                 </Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-export default AddUserDialog;
+export default AssignAdminsDialog;

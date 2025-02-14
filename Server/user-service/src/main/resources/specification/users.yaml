@@ -210,8 +210,8 @@ components:
           type: string
           description: Hashed password for secure storage
         role:
-          type: integer
-          description: User Role Id
+          type: string
+          description: User Role Name
         name:
           type: string
           description: User Name
