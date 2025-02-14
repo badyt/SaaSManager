@@ -12,7 +12,6 @@ import {
     Button,
     Box,
     Divider,
-    Typography
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import ConfirmDeleteDialog from "../../SharedComponents/ConfirmDeleteDialog";

@@ -3,7 +3,7 @@ package org.example.saasmanager.config.validations;
 
 import org.example.saasmanager.licenses.repository.LicenseRepository;
 import org.example.saasmanager.subscriptions.repository.SubscriptionsRepository;
-import org.example.shared.entities.Subscription;
+import net.saas.shared.entities.Subscription;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

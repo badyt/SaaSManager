@@ -6,8 +6,8 @@ import com.example.subscriptions.model.UpdateSubscription;
 import org.example.saasmanager.catalog.repository.CatalogRepository;
 import org.example.saasmanager.subscriptions.mapper.SubscriptionMapper;
 import org.example.saasmanager.subscriptions.repository.SubscriptionsRepository;
-import org.example.shared.entities.CatalogEntity;
-import org.example.shared.entities.Subscription;
+import net.saas.shared.entities.CatalogEntity;
+import net.saas.shared.entities.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

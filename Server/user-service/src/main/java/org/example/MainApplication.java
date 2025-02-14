@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"org.example.shared.entities"})
+@EntityScan(basePackages = {"net.saas.shared.entities"})
 @EnableScheduling
 public class MainApplication {
 

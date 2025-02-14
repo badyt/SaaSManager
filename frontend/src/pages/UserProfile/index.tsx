@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     Box,
     Typography,
@@ -9,7 +9,6 @@ import {
     DialogContent,
     DialogActions,
     IconButton,
-    Paper,
     Divider,
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit'; // Import edit icon
@@ -64,7 +63,7 @@ const UserProfile = () => {
         if (!userId)
             return toast.error("error finding the user id");
         updateUserPassword({ id: userId, oldPassword: oldPassword, newPassword: newPassword }, {
-            onSuccess: (data) => {
+            onSuccess: () => {
                 toast.success("Updated Password successfully!");
             },
             onError: (error) => {

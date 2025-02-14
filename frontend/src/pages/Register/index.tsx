@@ -16,7 +16,7 @@ const Register = () => {
     (email === "" || password === "" || name === "") ?
       toast.error("Please fill in all the fields!") :
       registerUser({ email, password, name }, {
-        onSuccess: (data) => {
+        onSuccess: () => {
           toast.success("User registered successfully!"); queryClient.invalidateQueries(["users"]);
           navigate("/login");
         },

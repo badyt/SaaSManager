@@ -2,12 +2,11 @@ import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/authStore";
-import { Roles } from "../../constants/roles";
 import MenuIcon from '@mui/icons-material/Menu';
 import SideDrawer from "../SideDrawer";
 
 const MainAppBar: React.FC = () => {
-    const { token, role, logout } = useAuthStore();
+    const { token, logout } = useAuthStore();
     const [openDrawer, setDrawer] = useState(false);
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -39,12 +38,6 @@ const MainAppBar: React.FC = () => {
                 <Button color="inherit" onClick={() => navigate("/")}>
                     Home
                 </Button>
-                {/* {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/teams")}>
-                    Teams
-                </Button>} */}
-                {/* {(role === Roles.Admin) && <Button color="inherit" onClick={() => navigate("/catalog")}>
-                    Catalog
-                </Button>} */}
                 <Button color="inherit" onClick={() => navigate("/profile")}>
                     Profile
                 </Button>

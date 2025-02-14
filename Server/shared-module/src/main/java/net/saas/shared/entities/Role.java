@@ -1,9 +1,9 @@
-package org.example.shared.entities;
+package net.saas.shared.entities;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Data;
-import org.example.shared.enums.RoleName;
+import net.saas.shared.enums.RoleName;
 
 @Data
 @Entity

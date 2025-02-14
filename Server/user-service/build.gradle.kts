@@ -1,4 +1,5 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.util.*
 
 plugins {
@@ -29,7 +30,7 @@ buildscript {
 }
 
 springBoot {
-    mainClass.set("org.example.UserServiceApplication") // Replace with your actual main class package and name
+    mainClass.set("org.example.MainApplication") // Replace with your actual main class package and name
 }
 
 repositories {
@@ -100,9 +101,13 @@ tasks.withType<JavaCompile> {
 
 flyway {
 //    cleanDisabled = false
-    url = "jdbc:postgresql://localhost:5432/SaaSDatabase"
-    user = "postgres"
-    password = "password"
+    url = System.getenv("SPRING_DATASOURCE_URL") ?: "jdbc:postgresql://localhost:5432/SaaSDatabase"
+    user = System.getenv("SPRING_DATASOURCE_USERNAME") ?: "postgres"
+    password = System.getenv("SPRING_DATASOURCE_PASSWORD") ?: "password"
     schemas = listOf("public").toTypedArray()
     locations = listOf("filesystem:src/main/resources/db/migration").toTypedArray()
+}
+
+tasks.withType<BootJar> {
+    mainClass.set("org.example.MainApplication")
 }

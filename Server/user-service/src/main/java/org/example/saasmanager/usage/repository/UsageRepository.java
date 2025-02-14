@@ -1,6 +1,6 @@
 package org.example.saasmanager.usage.repository;
 
-import org.example.shared.entities.UsageLog;
+import net.saas.shared.entities.UsageLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -2,22 +2,18 @@ package org.example.saasmanager.licenses.service;
 
 import com.example.licenses.model.LicenseDTO;
 import com.example.licenses.model.NewLicense;
-import com.example.users.model.UserDTO;
 import org.example.saasmanager.licenses.mapper.LicenseMapper;
 import org.example.saasmanager.licenses.repository.LicenseRepository;
 import org.example.saasmanager.subscriptions.repository.SubscriptionsRepository;
 import org.example.saasmanager.team.repository.UserTeamRepository;
 import org.example.saasmanager.user.repository.UserRepository;
-import org.example.shared.entities.License;
-import org.example.shared.entities.Subscription;
-import org.example.shared.entities.User;
-import org.example.shared.entities.UserTeam;
+import net.saas.shared.entities.License;
+import net.saas.shared.entities.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LicenseService {

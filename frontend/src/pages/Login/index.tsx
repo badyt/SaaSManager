@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
-// import axios from "axios";
 import useAuthStore from "../../stores/authStore";
 import { useLogin } from "../../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -22,7 +21,7 @@ const Login = () => {
         setUserInfo(data.user_id, data.access_token, data.refresh_token ,data.name, data.role, data.email, data.status);
         navigate('/');
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("something went wrong loging in user!");
       },
     });
@@ -50,11 +49,6 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           margin="normal"
         />
-        {/* {error && (
-          <Typography color="error" variant="body2" mt={2}>
-            {error}
-          </Typography>
-        )} */}
         <Button
           fullWidth
           variant="contained"

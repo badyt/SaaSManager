@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: SaaSDatabase
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./Server
+    container_name: saasmanager-backend
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      FRONTEND_ORIGIN: http://localhost:3000
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/SaaSDatabase
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend  
+    container_name: saasmanager-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:

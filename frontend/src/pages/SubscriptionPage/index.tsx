@@ -87,10 +87,10 @@ const SubscriptionPage: React.FC = () => {
             toast.error("couldnt read properly the subscription id to delete!")
     };
     const handleViewUsers = (subscription: Subscription) => {
-        getUsersForSubscription(subscription.subscription_id).then((value) => {
+        getUsersForSubscription(subscription.subscription_id).then(() => {
             setSelectedSubscription(subscription)
             setIsViewUsersOpen(true)
-        }).catch((error) => { toast.error("something went wrong getting users for subscription!") })
+        }).catch(() => { toast.error("something went wrong getting users for subscription!") })
 
     };
 

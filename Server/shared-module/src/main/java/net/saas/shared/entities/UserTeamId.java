@@ -1,4 +1,4 @@
-package org.example.shared.entities;
+package net.saas.shared.entities;
 
 import java.io.Serializable;
 import lombok.Data;

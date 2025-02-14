@@ -5,15 +5,12 @@ import com.example.catalog.model.SaaSTool;
 import jakarta.persistence.EntityNotFoundException;
 import org.example.saasmanager.catalog.mapper.CatalogEntityMapper;
 import org.example.saasmanager.catalog.repository.CatalogRepository;
-import org.example.shared.entities.CatalogEntity;
-import org.example.shared.entities.User;
+import net.saas.shared.entities.CatalogEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class CatalogService {

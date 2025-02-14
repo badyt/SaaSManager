@@ -1,7 +1,7 @@
 package org.example.saasmanager.catalog.mapper;
 
 import com.example.catalog.model.SaaSTool;
-import org.example.shared.entities.CatalogEntity;
+import net.saas.shared.entities.CatalogEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

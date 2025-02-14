@@ -5,9 +5,9 @@ import org.example.saasmanager.team.mapper.TeamMapper;
 import org.example.saasmanager.team.repository.TeamRepository;
 import org.example.saasmanager.team.repository.UserTeamRepository;
 import org.example.saasmanager.user.repository.UserRepository;
-import org.example.shared.entities.Team;
-import org.example.shared.entities.User;
-import org.example.shared.entities.UserTeam;
+import net.saas.shared.entities.Team;
+import net.saas.shared.entities.User;
+import net.saas.shared.entities.UserTeam;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;

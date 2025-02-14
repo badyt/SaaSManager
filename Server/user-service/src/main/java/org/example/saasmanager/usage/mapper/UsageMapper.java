@@ -1,8 +1,9 @@
 package org.example.saasmanager.usage.mapper;
 
 import com.example.usage_monitoring.model.UsageLogDTO;
+import net.saas.shared.entities.License;
+import net.saas.shared.entities.UsageLog;
 import org.example.saasmanager.licenses.repository.LicenseRepository;
-import org.example.shared.entities.*;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

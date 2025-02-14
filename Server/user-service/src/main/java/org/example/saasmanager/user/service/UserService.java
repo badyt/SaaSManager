@@ -7,12 +7,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.example.saasmanager.user.mapper.UserMapper;
 import org.example.saasmanager.user.repository.RoleRepository;
 import org.example.saasmanager.user.repository.UserRepository;
-import org.example.shared.entities.Role;
-import org.example.shared.entities.User;
-import org.example.shared.enums.RoleName;
+import net.saas.shared.entities.Role;
+import net.saas.shared.entities.User;
+import net.saas.shared.enums.RoleName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -76,7 +74,7 @@ public class UserService {
             existingUser.setPassword(userUpdateData.getPassword());
         }
         if (userUpdateData.getRole() != null) {
-            Role role = roleRepository.findById(userUpdateData.getRole())
+            Role role = roleRepository.findByRoleName(RoleName.valueOf(userUpdateData.getRole()))
                     .orElseThrow(() -> new NoSuchElementException("Role not found with ID: " + userUpdateData.getRole()));
             existingUser.setRole(role);
         }

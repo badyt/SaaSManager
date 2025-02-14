@@ -1,7 +1,7 @@
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from './pages/Home';

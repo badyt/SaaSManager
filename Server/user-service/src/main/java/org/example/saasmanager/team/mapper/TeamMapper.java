@@ -2,8 +2,8 @@ package org.example.saasmanager.team.mapper;
 
 import com.example.teams.model.TeamDTO;
 import org.example.saasmanager.user.repository.UserRepository;
-import org.example.shared.entities.Team;
-import org.example.shared.entities.User;
+import net.saas.shared.entities.Team;
+import net.saas.shared.entities.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

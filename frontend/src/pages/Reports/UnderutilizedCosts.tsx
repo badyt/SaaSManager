@@ -31,7 +31,7 @@ const UnderutilizedCosts: React.FC = () => {
     ];
 
     const title =
-        `Underutilized Licenses in the last ${filters.period.slice(0, 1)}`
+        `Underutilized Licenses in the last ${filters.period.slice(0, 2)} days`
 
     return (
         <Box sx={{ p: 4, textAlign: "center", backgroundColor: "transparent" }}>

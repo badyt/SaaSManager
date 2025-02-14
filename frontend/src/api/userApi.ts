@@ -1,4 +1,3 @@
-import useAuthStore from "../stores/authStore";
 import apiClient from "./apiClient";
 
 export const fetchUsers = async () => {

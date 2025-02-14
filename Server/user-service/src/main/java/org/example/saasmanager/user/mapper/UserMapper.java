@@ -2,8 +2,8 @@ package org.example.saasmanager.user.mapper;
 
 import com.example.users.model.UserDTO;
 import org.example.saasmanager.user.repository.RoleRepository;
-import org.example.shared.entities.Role;
-import org.example.shared.entities.User;
+import net.saas.shared.entities.Role;
+import net.saas.shared.entities.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

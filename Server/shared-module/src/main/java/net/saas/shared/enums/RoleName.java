@@ -1,4 +1,4 @@
-package org.example.shared.enums;
+package net.saas.shared.enums;
 
 public enum RoleName {
     ROLE_USER,

@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography, Box, Card, CardContent, Avatar, Container } from "@mui/material";
 import useAuthStore from "../../stores/authStore";
 import { Navigate, useNavigate } from "react-router-dom";

@@ -1,9 +1,9 @@
 package org.example.saasmanager.team.repository;
 
-import org.example.shared.entities.Team;
-import org.example.shared.entities.User;
-import org.example.shared.entities.UserTeam;
-import org.example.shared.entities.UserTeamId;
+import net.saas.shared.entities.Team;
+import net.saas.shared.entities.User;
+import net.saas.shared.entities.UserTeam;
+import net.saas.shared.entities.UserTeamId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
