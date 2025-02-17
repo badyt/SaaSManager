@@ -41,6 +41,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRoleId())
                 .name(request.getName())
+                .status(UserDTO.StatusEnum.ACTIVE)
                 .createdAt(OffsetDateTime.now());
         User user = userMapper.toEntity(userDTO, roleRepository);
         repository.save(user);

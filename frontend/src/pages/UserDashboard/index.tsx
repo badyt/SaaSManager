@@ -24,7 +24,7 @@ const UserDashboard: React.FC = () => {
         title: "Assign Admins",
         onClick: () => setAssignDialogOpen(true),
     }]
-
+     
     const handleAssignAdmin = (userId: number | null) => {
         if (!userId)
             return toast.error("please select user before.");
@@ -55,9 +55,9 @@ const UserDashboard: React.FC = () => {
             <Typography variant="h5">Your Teams</Typography>
             <List>
                 {userTeams?.length > 0 ? (
-                    userTeams.map((team: { teamId: number; teamName: string }) => (
-                        <ListItem key={team.teamId}>
-                            <Typography>{team.teamName}</Typography>
+                    userTeams.map((team: TeamDTO) => (
+                        <ListItem key={team.id}>
+                            <Typography>{team.name}</Typography>
                         </ListItem>
                     ))
                 ) : (
